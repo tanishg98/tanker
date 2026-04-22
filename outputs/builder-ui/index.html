@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Builder Kit UI — tanishg98/my-builder-kit -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Builder Kit — Claude Code skills, agents, and rules reference dashboard">
+  <title>Builder Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0c0c0c;
+      --surface:     #141414;
+      --surface-2:   #1a1a1a;
+      --surface-3:   #222222;
+      --border:      #2a2a2a;
+      --border-2:    #363636;
+      --text:        #e8e8e8;
+      --text-2:      #999;
+      --text-3:      #666;
+      --accent:      #e8912d;
+      --accent-dim:  rgba(232, 145, 45, 0.12);
+      --accent-2:    #f0a84a;
+      --green:       #4ade80;
+      --green-dim:   rgba(74, 222, 128, 0.1);
+      --blue:        #60a5fa;
+      --blue-dim:    rgba(96, 165, 250, 0.1);
+      --purple:      #a78bfa;
+      --purple-dim:  rgba(167, 139, 250, 0.1);
+      --red:         #f87171;
+      --red-dim:     rgba(248, 113, 113, 0.1);
+      --radius:      8px;
+      --radius-sm:   5px;
+      --font:        'Inter', system-ui, sans-serif;
+      --mono:        'JetBrains Mono', 'Fira Code', monospace;
+      --sidebar-w:   220px;
+      --header-h:    56px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── Layout ───────────────────────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: var(--header-h) 1fr;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ───────────────────────────────────────────────────────── */
+    .header {
+      grid-column: 1 / -1;
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .header-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-3);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .header-spacer { flex: 1; }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      width: 220px;
+    }
+
+    .header-search input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .header-search input::placeholder { color: var(--text-3); }
+
+    .search-icon { color: var(--text-3); font-size: 13px; }
+
+    .header-link {
+      color: var(--text-3);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .header-link:hover { color: var(--text); background: var(--surface-3); }
+
+    /* ─── Sidebar ──────────────────────────────────────────────────────── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky;
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      margin-bottom: 8px;
+    }
+
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 8px 20px 4px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 20px;
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.15s, background 0.15s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link.active {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .sidebar-link.active { color: var(--accent); }
+
+    .sidebar-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border-2);
+      flex-shrink: 0;
+    }
+
+    .sidebar-link.active .sidebar-dot { background: var(--accent); }
+
+    /* ─── Main Content ─────────────────────────────────────────────────── */
+    .main {
+      overflow-y: auto;
+      padding: 32px 40px;
+      max-width: 1100px;
+    }
+
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    /* ─── Workflow Pipeline ─────────────────────────────────────────────── */
+    #workflow { scroll-margin-top: calc(var(--header-h) + 24px); }
+
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .pipeline-node {
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      min-width: 130px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+      position: relative;
+    }
+
+    .pipeline-node:hover {
+      border-color: var(--accent);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+
+    .pipeline-node-cmd {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .pipeline-node-label {
+      font-size: 12px;
+      color: var(--text-2);
+    }
+
+    .pipeline-node-badge {
+      position: absolute;
+      top: -8px;
+      right: 8px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid rgba(74, 222, 128, 0.2);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+
+    .pipeline-node-badge.new {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-color: rgba(232, 145, 45, 0.2);
+    }
+
+    .pipeline-arrow {
+      flex-shrink: 0;
+      color: var(--border-2);
+      font-size: 16px;
+      padding: 0 6px;
+      margin-top: 2px;
+    }
+
+    /* full workflow labels */
+    .workflow-ext {
+      margin-top: 20px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-branch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+
+    .workflow-branch-label {
+      color: var(--text-3);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-right: 4px;
+    }
+
+    .workflow-branch-cmd {
+      font-family: var(--mono);
+      color: var(--blue);
+      font-size: 11px;
+    }
+
+    /* ─── Filter Tabs ───────────────────────────────────────────────────── */
+    .filter-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      transition: all 0.15s;
+    }
+
+    .filter-tab:hover { border-color: var(--border-2); color: var(--text); }
+
+    .filter-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0c0c0c;
+    }
+
+    /* ─── Skills Grid ───────────────────────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, transform 0.15s;
+      cursor: pointer;
+    }
+
+    .skill-card:hover {
+      border-color: var(--border-2);
+      transform: translateY(-1px);
+    }
+
+    .skill-card.expanded {
+      border-color: var(--accent);
+    }
+
+    .skill-card-head {
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .skill-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .skill-card-meta { flex: 1; min-width: 0; }
+
+    .skill-card-cmd {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-card-cmd-badge {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .badge-new {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid rgba(232, 145, 45, 0.2);
+    }
+
+    .badge-core {
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid rgba(74, 222, 128, 0.2);
+    }
+
+    .skill-card-name {
+      font-size: 13px;
+      color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .skill-card-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .copy-btn {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-3);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--mono);
+    }
+
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+    .expand-btn {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      font-size: 12px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+
+    .expand-btn:hover { color: var(--text); }
+
+    .skill-card-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 16px;
+    }
+
+    .skill-card-desc {
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+
+    .skill-card-body {
+      display: none;
+      padding: 0 16px 16px;
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.7;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    .skill-card.expanded .skill-card-body { display: block; }
+
+    .skill-card-when {
+      margin-top: 10px;
+    }
+
+    .skill-card-when-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-3);
+      margin-bottom: 4px;
+    }
+
+    /* ─── Category Pill ─────────────────────────────────────────────────── */
+    .cat-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .cat-planning  { background: var(--blue-dim);   color: var(--blue); }
+    .cat-building  { background: var(--green-dim);  color: var(--green); }
+    .cat-quality   { background: var(--purple-dim); color: var(--purple); }
+    .cat-utilities { background: var(--accent-dim); color: var(--accent); }
+
+    /* ─── Agents ────────────────────────────────────────────────────────── */
+    .agents-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+    }
+
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      transition: border-color 0.15s;
+    }
+
+    .agent-card:hover { border-color: var(--border-2); }
+
+    .agent-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .agent-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      background: var(--surface-3);
+    }
+
+    .agent-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .agent-readonly {
+      font-size: 10px;
+      color: var(--text-3);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      margin-left: auto;
+    }
+
+    .agent-desc {
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .agent-tools {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .agent-tool {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-3);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    /* ─── Rules ─────────────────────────────────────────────────────────── */
+    .rules-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .rule-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .rule-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .rule-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .rule-always-on {
+      font-size: 10px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(232, 145, 45, 0.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-left: auto;
+    }
+
+    .rule-principles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .rule-principle {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+
+    .rule-principle-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .rule-principle-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .rule-principle-desc {
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    /* ─── Workflow detail expanded ──────────────────────────────────────── */
+    .workflow-detail {
+      display: none;
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .workflow-detail.visible { display: block; }
+
+    .workflow-detail-title {
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .workflow-detail-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .workflow-detail-when {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .workflow-detail-when strong { color: var(--text-2); }
+
+    /* ─── Reflect Log ────────────────────────────────────────────────────── */
+    .reflect-log {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .reflect-log-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .reflect-log-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .reflect-log-path {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-3);
+      margin-left: auto;
+    }
+
+    .reflect-empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+
+    .reflect-empty-icon { font-size: 28px; margin-bottom: 10px; }
+
+    .reflect-entries { padding: 8px 0; }
+
+    .reflect-entry {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .reflect-entry:last-child { border-bottom: none; }
+
+    .reflect-date {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-3);
+      padding-top: 1px;
+    }
+
+    .reflect-text { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+    .reflect-file {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border-radius: 4px;
+      padding: 1px 6px;
+      display: inline;
+    }
+
+    /* ─── Hidden search state ───────────────────────────────────────────── */
+    .skill-card.hidden { display: none; }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+    /* ─── Responsive ────────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+      .skill-card-body { transition: none; }
+      .pipeline-node { transition: border-color 0.15s, background 0.15s, transform 0.2s; }
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: var(--header-h) auto 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .main {
+        padding: 24px 20px;
+      }
+      .header-search { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="header-icon">⚡</div>
+      <span class="header-title">Builder Kit</span>
+      <span class="header-badge">v2.0</span>
+    </div>
+    <div class="header-spacer"></div>
+    <div class="header-search">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Search skills..." autocomplete="off">
+    </div>
+    <a href="https://github.com/tanishg98/my-builder-kit" class="header-link" target="_blank" rel="noopener">GitHub ↗</a>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigate</div>
+      <a class="sidebar-link active" onclick="scrollTo('workflow')">
+        <span class="sidebar-dot"></span> Workflow
+      </a>
+      <a class="sidebar-link" onclick="scrollTo('skills')">
+        <span class="sidebar-dot"></span> Skills
+      </a>
+      <a class="sidebar-link" onclick="scrollTo('agents')">
+        <span class="sidebar-dot"></span> Agents
+      </a>
+      <a class="sidebar-link" onclick="scrollTo('rules')">
+        <span class="sidebar-dot"></span> Rules
+      </a>
+      <a class="sidebar-link" onclick="scrollTo('reflect')">
+        <span class="sidebar-dot"></span> Reflect Log
+      </a>
+    </div>
+
+    <div class="sidebar-section" style="margin-top: 16px;">
+      <div class="sidebar-label">Categories</div>
+      <a class="sidebar-link" onclick="filterSkills('planning')">
+        <span class="sidebar-dot" style="background: var(--blue)"></span> Planning
+      </a>
+      <a class="sidebar-link" onclick="filterSkills('building')">
+        <span class="sidebar-dot" style="background: var(--green)"></span> Building
+      </a>
+      <a class="sidebar-link" onclick="filterSkills('quality')">
+        <span class="sidebar-dot" style="background: var(--purple)"></span> Quality
+      </a>
+      <a class="sidebar-link" onclick="filterSkills('utilities')">
+        <span class="sidebar-dot" style="background: var(--accent)"></span> Utilities
+      </a>
+    </div>
+
+    <div class="sidebar-section" style="margin-top: 16px;">
+      <div class="sidebar-label">New in v2</div>
+      <a class="sidebar-link" onclick="scrollToSkill('architect')">
+        <span class="sidebar-dot" style="background: var(--accent)"></span> /architect
+      </a>
+      <a class="sidebar-link" onclick="scrollToSkill('backend-builder')">
+        <span class="sidebar-dot" style="background: var(--accent)"></span> /backend-builder
+      </a>
+      <a class="sidebar-link" onclick="scrollToSkill('deploy')">
+        <span class="sidebar-dot" style="background: var(--accent)"></span> /deploy
+      </a>
+      <a class="sidebar-link" onclick="scrollToSkill('monitor')">
+        <span class="sidebar-dot" style="background: var(--accent)"></span> /monitor
+      </a>
+      <a class="sidebar-link" onclick="scrollToSkill('pre-merge')">
+        <span class="sidebar-dot" style="background: var(--accent)"></span> pre-merge
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ── Workflow ──────────────────────────────────────────────────── -->
+    <section class="section" id="workflow">
+      <div class="section-header">
+        <h2 class="section-title">Workflow</h2>
+        <p class="section-desc">Every project follows the same loop. Click a node to see what it does.</p>
+      </div>
+
+      <div class="pipeline" id="pipeline">
+        <div class="pipeline-node" onclick="showWorkflowDetail('explore')">
+          <div class="pipeline-node-cmd">/explore</div>
+          <div class="pipeline-node-label">Map codebase</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('architect')">
+          <div class="pipeline-node-badge new">new</div>
+          <div class="pipeline-node-cmd">/architect</div>
+          <div class="pipeline-node-label">Design system</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('createplan')">
+          <div class="pipeline-node-cmd">/createplan</div>
+          <div class="pipeline-node-label">Write plan</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('execute')">
+          <div class="pipeline-node-cmd">/execute</div>
+          <div class="pipeline-node-label">Build it</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('pre-merge')">
+          <div class="pipeline-node-badge new">new</div>
+          <div class="pipeline-node-cmd">pre-merge</div>
+          <div class="pipeline-node-label">Quality gate</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('deploy')">
+          <div class="pipeline-node-badge new">new</div>
+          <div class="pipeline-node-cmd">/deploy</div>
+          <div class="pipeline-node-label">Ship it</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('monitor')">
+          <div class="pipeline-node-badge new">new</div>
+          <div class="pipeline-node-cmd">/monitor</div>
+          <div class="pipeline-node-label">Observe</div>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-node" onclick="showWorkflowDetail('reflect')">
+          <div class="pipeline-node-cmd">/reflect</div>
+          <div class="pipeline-node-label">Self-improve</div>
+        </div>
+      </div>
+
+      <!-- workflow branch: bug track -->
+      <div class="workflow-ext">
+        <div class="workflow-branch">
+          <span class="workflow-branch-label">Bug</span>
+          <span class="workflow-branch-cmd">/debug</span>
+          <span style="color: var(--text-3)">→</span>
+          <span class="workflow-branch-cmd">/autoresearch-review</span>
+          <span style="color: var(--text-3)">→</span>
+          <span class="workflow-branch-cmd">/test-gen</span>
+        </div>
+        <div class="workflow-branch">
+          <span class="workflow-branch-label">PR Review</span>
+          <span class="workflow-branch-cmd">pre-merge agent</span>
+          <span style="color: var(--text-3)">→</span>
+          <span class="workflow-branch-cmd">/peer-review</span>
+        </div>
+        <div class="workflow-branch">
+          <span class="workflow-branch-label">Feedback</span>
+          <span class="workflow-branch-cmd">/reflect</span>
+          <span style="color: var(--text-3)">auto-triggers</span>
+        </div>
+      </div>
+
+      <!-- workflow detail panel -->
+      <div class="workflow-detail" id="workflow-detail">
+        <div class="workflow-detail-title" id="wd-cmd"></div>
+        <div class="workflow-detail-desc" id="wd-desc"></div>
+        <div class="workflow-detail-when" id="wd-when"></div>
+      </div>
+    </section>
+
+    <!-- ── Skills ────────────────────────────────────────────────────── -->
+    <section class="section" id="skills">
+      <div class="section-header">
+        <h2 class="section-title">Skills</h2>
+        <p class="section-desc">Invoke with <code style="font-family: var(--mono); color: var(--accent); background: var(--accent-dim); padding: 1px 6px; border-radius: 4px;">/skill-name</code> in any Claude Code session. Click a card to expand details.</p>
+      </div>
+
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" onclick="filterSkills('all')">All</button>
+        <button class="filter-tab" onclick="filterSkills('planning')">Planning</button>
+        <button class="filter-tab" onclick="filterSkills('building')">Building</button>
+        <button class="filter-tab" onclick="filterSkills('quality')">Quality</button>
+        <button class="filter-tab" onclick="filterSkills('utilities')">Utilities</button>
+      </div>
+
+      <div class="skills-grid" id="skills-grid">
+
+        <!-- Planning -->
+        <div class="skill-card" data-cat="planning" data-cmd="/explore" id="skill-explore">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--blue-dim);">🔍</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /explore
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Codebase exploration</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/explore')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-explore')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Maps the codebase, traces data flows, surfaces risks before any code is written. Run before every <code style="font-family:var(--mono);color:var(--blue)">/createplan</code>.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              Before starting any feature or bug fix. Run first, plan second.
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">v2 enhancement</div>
+              Now includes large codebase strategy: scopes to subsystem if &gt;20 relevant files, follows call graph 2–3 levels deep from entry points.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-planning">Planning</span>
+              <span class="agent-tool">Read</span>
+              <span class="agent-tool">Grep</span>
+              <span class="agent-tool">Glob</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="planning" data-cmd="/architect" id="skill-architect">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--accent-dim);">🏗️</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /architect
+                <span class="skill-card-cmd-badge badge-new">new</span>
+              </div>
+              <div class="skill-card-name">System design</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/architect')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-architect')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Designs systems before they're built. Produces component diagram, data model, API contracts, decision log, and risk register.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              Before <code style="font-family:var(--mono);color:var(--accent)">/createplan</code> on anything spanning multiple layers — frontend + backend, multiple services, or a new data model.
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">Outputs</div>
+              Component diagram · Data model · API contracts · Decision log · Risk register · Open questions
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-planning">Planning</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="planning" data-cmd="/createplan" id="skill-createplan">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--blue-dim);">📋</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /createplan
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Implementation planning</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/createplan')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-createplan')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Creates a scoped, step-sized implementation plan. Flags risks and open questions before any code is written.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              After <code style="font-family:var(--mono);color:var(--blue)">/explore</code> Q&amp;A is complete and all ambiguities are resolved.
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">v2 enhancement</div>
+              Now includes dependency analysis, risk-first step ordering, spike steps for unknowns, and a confidence check before handoff.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-planning">Planning</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="planning" data-cmd="/execute" id="skill-execute">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--blue-dim);">▶️</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /execute
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Step-by-step implementation</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/execute')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-execute')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Implements the plan one step at a time. Updates the tracker, writes a status report after each step, stops if something unexpected is found.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              After <code style="font-family:var(--mono);color:var(--blue)">/createplan</code> is complete and reviewed.
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">Key rule</div>
+              Never goes off-plan. If something unexpected comes up, it stops and reports — doesn't improvise.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-planning">Planning</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Building -->
+        <div class="skill-card" data-cat="building" data-cmd="/backend-builder" id="skill-backend-builder">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--green-dim);">⚙️</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /backend-builder
+                <span class="skill-card-cmd-badge badge-new">new</span>
+              </div>
+              <div class="skill-card-name">APIs, servers, databases</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/backend-builder')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-backend-builder')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Full backend lifecycle: stack selection, project scaffold, core patterns (routes, validation, auth, error handling, DB), and security checklist.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Stacks covered</div>
+              Node/Express · Fastify · Hono · FastAPI · Flask · Supabase
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">Security checklist includes</div>
+              Input validation · Parameterised queries · Auth (authn + authz + rate limiting) · RLS for Supabase · No secrets in code
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-building">Building</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="building" data-cmd="/browser-extension-builder" id="skill-browser-extension-builder">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--green-dim);">🧩</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /browser-extension-builder
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Chrome &amp; Firefox MV3</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/browser-extension-builder')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-browser-extension-builder')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Full lifecycle for Manifest V3 extensions. Architecture decisions, key patterns, security checklist, self-test checklist, and packaging.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Covers</div>
+              Popup · Content Script · Service Worker · Options Page · Message passing · chrome.storage · CSP-safe HTML
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-building">Building</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="building" data-cmd="/mobile-app-builder" id="skill-mobile-app-builder">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--green-dim);">📱</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /mobile-app-builder
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">PWA + Expo / React Native</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/mobile-app-builder')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-mobile-app-builder')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Two paths: PWA (web-based, fast) or Expo/React Native (native APIs, app store). Chooses based on requirements.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Path A — PWA</div>
+              No native APIs needed, web-based, fast delivery
+            </div>
+            <div style="margin-top:6px">
+              <div class="skill-card-when-label">Path B — Expo</div>
+              Camera, GPS, biometrics, app store required
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-building">Building</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="building" data-cmd="/static-site-replicator" id="skill-static-site-replicator">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--green-dim);">🌐</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /static-site-replicator
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Replicate any website</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/static-site-replicator')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-static-site-replicator')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Replicates reference sites as polished static HTML/CSS/JS with new brand assets. Self-eval loop, then passes site-eval agent gate before delivery.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              Share a URL + new brand → get a fully built static site. No copy/paste from the reference — new brand, same structure.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-building">Building</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="building" data-cmd="/deploy" id="skill-deploy">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--green-dim);">🚀</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /deploy
+                <span class="skill-card-cmd-badge badge-new">new</span>
+              </div>
+              <div class="skill-card-name">Deployment &amp; CI/CD</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/deploy')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-deploy')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Wires up production deployment with env vars, CI/CD pipeline, health checks, and rollback strategy.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Platforms</div>
+              Vercel · Railway · Fly.io · Docker/Compose
+            </div>
+            <div style="margin-top:6px">
+              <div class="skill-card-when-label">Covers</div>
+              Env var audit · GitHub Actions CI · Health check endpoint · Rollback procedure · Pre-launch checklist
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-building">Building</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="building" data-cmd="/monitor" id="skill-monitor">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--green-dim);">📡</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /monitor
+                <span class="skill-card-cmd-badge badge-new">new</span>
+              </div>
+              <div class="skill-card-name">Post-ship observability</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/monitor')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-monitor')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Sets up error tracking, analytics, uptime monitoring, and structured logging so you know when production breaks before users tell you.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Four pillars</div>
+              Sentry (errors) · PostHog/Plausible (analytics) · Better Uptime (uptime) · Pino/Axiom (logs)
+            </div>
+            <div style="margin-top:6px">
+              <div class="skill-card-when-label">Priority order</div>
+              Error tracking first → uptime → logging → analytics
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-building">Building</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quality -->
+        <div class="skill-card" data-cat="quality" data-cmd="/autoresearch-review" id="skill-autoresearch-review">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--purple-dim);">🔬</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /autoresearch-review
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Deep pre-merge bug analysis</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/autoresearch-review')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-autoresearch-review')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Karpathy-style systematic bug analysis. Tags every function by change type, runs failure mode catalogue, scores P0–P3. Returns merge verdict.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Also invoke as</div>
+              <code style="font-family:var(--mono);color:var(--accent)">/ar-review</code>
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">Verdict options</div>
+              BLOCK · MERGE WITH FIXES · MERGE SAFE
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-quality">Quality</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="quality" data-cmd="/debug" id="skill-debug">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--purple-dim);">🐛</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /debug
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Systematic root-cause tracing</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/debug')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-debug')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Eliminates guess-and-check debugging. Traces from symptom to exact divergence point layer by layer before touching any code.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Five phases</div>
+              Understand symptom → Locate failure layer → Form hypothesis → Verify without changing → Fix surgically
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-quality">Quality</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="quality" data-cmd="/test-gen" id="skill-test-gen">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--purple-dim);">🧪</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /test-gen
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Targeted test generation</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/test-gen')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-test-gen')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Writes the minimum tests needed to catch the highest-probability bugs. Bug-probability ordered, not coverage-padding ordered.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">v2 enhancement</div>
+              Now detects test framework before writing tests. If none found: recommends one with setup steps and stops — won't write tests into a void.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-quality">Quality</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="quality" data-cmd="/reflect" id="skill-reflect">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--purple-dim);">🔄</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /reflect
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Self-correction loop</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/reflect')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-reflect')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">When something goes wrong, traces the failure to the specific skill/rule that caused it, proposes a surgical fix, applies it after approval.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Auto-triggers when</div>
+              A step is blocked, user gives corrective feedback ("no, don't do that"), or something goes wrong mid-implementation.
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-card-when-label">v2 enhancement</div>
+              Now reads reflect-log.md first to detect repeat failures. If fix was applied before but recurred, goes one level deeper.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-quality">Quality</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="quality" data-cmd="/peer-review" id="skill-peer-review">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--purple-dim);">👥</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">
+                /peer-review
+                <span class="skill-card-cmd-badge badge-core">core</span>
+              </div>
+              <div class="skill-card-name">Reviewer feedback triage</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/peer-review')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-peer-review')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Triages human reviewer feedback. Classifies each finding as Accept / Accept (fix wrong) / Context Missing / Reject, then produces an action plan.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              When a colleague has reviewed your code and you have findings to process.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-quality">Quality</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Utilities -->
+        <div class="skill-card" data-cat="utilities" data-cmd="/documentation" id="skill-documentation">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--accent-dim);">📝</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">/documentation</div>
+              <div class="skill-card-name">Changelog &amp; inline docs</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/documentation')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-documentation')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Updates CHANGELOG.md and inline JSDoc after a feature or fix. Reads actual code first — no invented entries.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">When to use</div>
+              After implementing a feature or fix. Pass the diff or describe what changed.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-utilities">Utilities</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="utilities" data-cmd="/create-issue" id="skill-create-issue">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--accent-dim);">🎫</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">/create-issue</div>
+              <div class="skill-card-name">Issue capture</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/create-issue')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-create-issue')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Captures a bug or feature as a clean, structured issue document mid-flow without losing context.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Output fields</div>
+              Type · Priority (P0–P3) · Effort (XS–XL) · Description · Expected behaviour · Relevant files · Risks
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-utilities">Utilities</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-cat="utilities" data-cmd="/learning" id="skill-learning">
+          <div class="skill-card-head">
+            <div class="skill-card-icon" style="background: var(--accent-dim);">🎓</div>
+            <div class="skill-card-meta">
+              <div class="skill-card-cmd">/learning</div>
+              <div class="skill-card-name">Teaching mode</div>
+            </div>
+            <div class="skill-card-actions">
+              <button class="copy-btn" onclick="copyCmd(event, '/learning')">copy</button>
+              <button class="expand-btn" onclick="toggleExpand(event, 'skill-learning')">▾</button>
+            </div>
+          </div>
+          <div class="skill-card-divider"></div>
+          <div class="skill-card-desc">Explains a concept in three progressive levels. Pauses for confirmation between each level. Peer-to-peer tone, no fluff.</div>
+          <div class="skill-card-body">
+            <div class="skill-card-when">
+              <div class="skill-card-when-label">Three levels</div>
+              L1: Core concept (3–5 sentences) → L2: Mechanics + tradeoffs + codebase example → L3: Production reality + edge cases + senior perspective
+            </div>
+            <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+              <span class="cat-pill cat-utilities">Utilities</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Agents ─────────────────────────────────────────────────────── -->
+    <section class="section" id="agents">
+      <div class="section-header">
+        <h2 class="section-title">Agents</h2>
+        <p class="section-desc">Agents run autonomously on a focused task and return a structured report. All agents are read-only — they never modify files.</p>
+      </div>
+      <div class="agents-list">
+
+        <div class="agent-card" id="agent-explore">
+          <div class="agent-head">
+            <div class="agent-icon">🔍</div>
+            <span class="agent-name">explore</span>
+            <span class="agent-readonly">read-only</span>
+          </div>
+          <p class="agent-desc">Codebase exploration. Given a feature or bug, reads relevant files, traces data flow, identifies integration points and constraints, returns an exploration report with numbered open questions. Feeds directly into <code style="font-family:var(--mono);color:var(--blue)">/createplan</code>.</p>
+          <div class="agent-tools">
+            <span class="agent-tool">Read</span>
+            <span class="agent-tool">Grep</span>
+            <span class="agent-tool">Glob</span>
+          </div>
+        </div>
+
+        <div class="agent-card" id="agent-review">
+          <div class="agent-head">
+            <div class="agent-icon">✅</div>
+            <span class="agent-name">review</span>
+            <span class="agent-readonly">read-only</span>
+          </div>
+          <p class="agent-desc">Focused code review. Checks logging, error handling, TypeScript, security, React hooks, performance, and architecture. Every finding gets a severity (CRITICAL–LOW) and every CRITICAL/HIGH gets a concrete fix. Classified as AUTO-FIX or ASK.</p>
+          <div class="agent-tools">
+            <span class="agent-tool">Read</span>
+            <span class="agent-tool">Grep</span>
+            <span class="agent-tool">Glob</span>
+          </div>
+        </div>
+
+        <div class="agent-card" id="agent-site-eval">
+          <div class="agent-head">
+            <div class="agent-icon">🎨</div>
+            <span class="agent-name">site-eval</span>
+            <span class="agent-readonly">read-only</span>
+          </div>
+          <p class="agent-desc">Pre-launch evaluator for static websites. Audits 9 dimensions — completeness, typography, responsiveness, images, performance, and AI slop detection. Issues PASS / CONDITIONAL / FAIL verdict. No site ships without a PASS.</p>
+          <div class="agent-tools">
+            <span class="agent-tool">Read</span>
+            <span class="agent-tool">Grep</span>
+            <span class="agent-tool">Glob</span>
+          </div>
+        </div>
+
+        <div class="agent-card" id="agent-pre-merge" style="border-color: rgba(232,145,45,0.3);">
+          <div class="agent-head">
+            <div class="agent-icon">🚦</div>
+            <span class="agent-name">pre-merge</span>
+            <span style="font-size:10px; color:var(--accent); background:var(--accent-dim); border:1px solid rgba(232,145,45,0.2); border-radius:4px; padding:1px 6px; margin-left:auto;">new</span>
+          </div>
+          <p class="agent-desc">Mandatory combined quality gate. Runs both code quality review and deep bug analysis (autoresearch-review) in a single pass. Returns BLOCK / PASS WITH FIXES / PASS. Run before every PR merge — no exceptions.</p>
+          <div class="agent-tools">
+            <span class="agent-tool">Read</span>
+            <span class="agent-tool">Grep</span>
+            <span class="agent-tool">Glob</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Rules ──────────────────────────────────────────────────────── -->
+    <section class="section" id="rules">
+      <div class="section-header">
+        <h2 class="section-title">Rules</h2>
+        <p class="section-desc">Always-on. Load automatically in every session. No invocation needed.</p>
+      </div>
+      <div class="rules-list">
+
+        <div class="rule-card">
+          <div class="rule-head">
+            <span style="font-size:18px">⚡</span>
+            <span class="rule-name">builder-ethos</span>
+            <span class="rule-always-on">always on</span>
+          </div>
+          <div class="rule-principles">
+            <div class="rule-principle">
+              <div class="rule-principle-num">01</div>
+              <div class="rule-principle-title">Boil the Lake</div>
+              <div class="rule-principle-desc">AI makes completeness near-zero-cost. Do the full implementation every time — 100% of spec, all edge cases, accessible, responsive from commit one.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">02</div>
+              <div class="rule-principle-title">Search Before Building</div>
+              <div class="rule-principle-desc">Three layers: tried-and-true patterns → new-and-popular (scrutinise) → first principles. The goal is the Eureka Moment: finding where conventional assumptions break for your case.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">03</div>
+              <div class="rule-principle-title">Fix-First Review</div>
+              <div class="rule-principle-desc">Every finding is AUTO-FIX (apply immediately, no discussion) or ASK (propose, confirm first) before any action is taken.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">04</div>
+              <div class="rule-principle-title">No AI Slop</div>
+              <div class="rule-principle-desc">Explicit ban list: purple gradients, 3-column feature grids, centred text &gt;60%, bubbly border-radius, generic hero copy, blacklisted fonts, missing focus states.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-head">
+            <span style="font-size:18px">⌨️</span>
+            <span class="rule-name">code-standards</span>
+            <span class="rule-always-on">always on</span>
+          </div>
+          <div class="rule-principles">
+            <div class="rule-principle">
+              <div class="rule-principle-num">Types</div>
+              <div class="rule-principle-title">No untyped code</div>
+              <div class="rule-principle-desc">No <code style="font-family:var(--mono)">any</code> without a comment. Proper interfaces for anything shared between files.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">Comments</div>
+              <div class="rule-principle-title">Why, not what</div>
+              <div class="rule-principle-desc">Comments explain the reasoning. The code explains what it does. <code style="font-family:var(--mono)">// increment counter</code> is noise.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">Patterns</div>
+              <div class="rule-principle-title">Follow the codebase</div>
+              <div class="rule-principle-desc">Find the closest existing example and follow it exactly — naming, file structure, export patterns, error handling style.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-head">
+            <span style="font-size:18px">🌐</span>
+            <span class="rule-name">static-site-standards</span>
+            <span class="rule-always-on">always on · static sites only</span>
+          </div>
+          <div class="rule-principles">
+            <div class="rule-principle">
+              <div class="rule-principle-num">Architecture</div>
+              <div class="rule-principle-title">Single-file first</div>
+              <div class="rule-principle-desc">One <code style="font-family:var(--mono)">index.html</code> with inline CSS/JS. No frameworks, no build tools. CDN for external deps only.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">CSS</div>
+              <div class="rule-principle-title">Custom properties always</div>
+              <div class="rule-principle-desc">Colors, fonts, spacing defined in <code style="font-family:var(--mono)">:root</code>. Mobile-first. <code style="font-family:var(--mono)">clamp()</code> for fluid type. No inline styles.</div>
+            </div>
+            <div class="rule-principle">
+              <div class="rule-principle-num">Eval Gate</div>
+              <div class="rule-principle-title">site-eval before shipping</div>
+              <div class="rule-principle-desc">No site is done until the site-eval agent returns PASS. CONDITIONAL or FAIL means more work first.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Reflect Log ─────────────────────────────────────────────────── -->
+    <section class="section" id="reflect">
+      <div class="section-header">
+        <h2 class="section-title">Reflect Log</h2>
+        <p class="section-desc">Lessons applied to the kit. Written by <code style="font-family:var(--mono);color:var(--accent)">/reflect</code> after each corrective session.</p>
+      </div>
+      <div class="reflect-log">
+        <div class="reflect-log-header">
+          <span style="font-size:14px">📖</span>
+          <span class="reflect-log-title">Improvement history</span>
+          <span class="reflect-log-path">.claude/reflect-log.md</span>
+        </div>
+        <div id="reflect-content">
+          <div class="reflect-empty">
+            <div class="reflect-empty-icon">✦</div>
+            No reflections yet.<br>
+            <span style="font-size:12px; margin-top:4px; display:block;">When <code style="font-family:var(--mono);color:var(--accent)">/reflect</code> applies a fix, it will appear here.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ── Workflow detail data ────────────────────────────────────────────
+  const workflowData = {
+    explore: {
+      cmd: '/explore',
+      desc: 'Maps the codebase before any code is written. Reads relevant files, traces data flow, identifies integration points, constraints, and open questions. Returns a structured report that feeds directly into /createplan.',
+      when: '<strong>Run first, always.</strong> Before any feature or bug fix. Iterate on open questions until none remain, then proceed to /architect or /createplan.'
+    },
+    architect: {
+      cmd: '/architect  ← new',
+      desc: 'Designs systems before they\'re built. Produces component diagram, data model, API contracts, decision log, and risk register. Fills the gap between "I know what the problem is" and "I know how to build the solution."',
+      when: '<strong>Run before /createplan</strong> when the feature spans multiple layers (frontend + backend), requires a new DB schema, or has more than one viable implementation path with real tradeoffs.'
+    },
+    createplan: {
+      cmd: '/createplan',
+      desc: 'Creates a scoped, step-sized implementation plan. Maps dependencies between steps, surfaces unknowns as spike steps, orders by risk-first, and runs a confidence check before handoff.',
+      when: '<strong>Run after /explore (and /architect if applicable)</strong> and all open questions are answered. This is the last checkpoint before writing code.'
+    },
+    execute: {
+      cmd: '/execute',
+      desc: 'Implements the plan one step at a time. Marks steps complete as it goes, writes a status report after each step, and stops — so you stay in control of what gets built and when. Never goes off-plan.',
+      when: '<strong>Run with the plan file path</strong> after /createplan is complete and reviewed.'
+    },
+    'pre-merge': {
+      cmd: 'pre-merge agent  ← new',
+      desc: 'The mandatory quality gate before any code merges. Runs both code quality review and deep bug analysis (autoresearch-review) in a single pass. Returns BLOCK / PASS WITH FIXES / PASS with specific issues.',
+      when: '<strong>Run before every PR merge</strong> — no exceptions. A BLOCK verdict means the PR does not merge until the blocking issues are resolved.'
+    },
+    deploy: {
+      cmd: '/deploy  ← new',
+      desc: 'Wires up a production deployment pipeline. Handles environment variables, CI/CD (GitHub Actions), platform-specific setup (Vercel/Railway/Fly/Docker), health checks, and rollback procedures.',
+      when: '<strong>Run after /execute</strong> when the build is ready to ship, or at project start to wire up the deployment pipeline early.'
+    },
+    monitor: {
+      cmd: '/monitor  ← new',
+      desc: 'Sets up observability for the running system: error tracking (Sentry), analytics (PostHog/Plausible), uptime monitoring (Better Uptime), and structured logging (Pino + Axiom). Sets up alerting so problems come to you.',
+      when: '<strong>Run after /deploy.</strong> Priority order: error tracking first (non-negotiable), then uptime, then logging, then analytics.'
+    },
+    reflect: {
+      cmd: '/reflect',
+      desc: 'When something goes wrong, traces the failure to the specific skill, agent, or rule that caused it. Proposes a surgical fix, applies it after approval, logs it to reflect-log.md. The kit improves over time.',
+      when: '<strong>Auto-triggers</strong> when a step is blocked or you give corrective feedback. Also invoke manually to capture a learning from the current session.'
+    }
+  }
+
+  let activeWorkflowNode = null
+
+  function showWorkflowDetail(key) {
+    const data = workflowData[key]
+    const panel = document.getElementById('workflow-detail')
+    if (activeWorkflowNode === key && panel.classList.contains('visible')) {
+      panel.classList.remove('visible')
+      activeWorkflowNode = null
+      return
+    }
+    document.getElementById('wd-cmd').textContent = data.cmd
+    document.getElementById('wd-desc').textContent = data.desc
+    document.getElementById('wd-when').innerHTML = data.when
+    panel.classList.add('visible')
+    activeWorkflowNode = key
+  }
+
+  // ── Skills filter ────────────────────────────────────────────────────
+  function filterSkills(cat) {
+    const cards = document.querySelectorAll('.skill-card')
+    const tabs = document.querySelectorAll('.filter-tab')
+
+    tabs.forEach(t => t.classList.remove('active'))
+    const matchTab = [...tabs].find(t => t.textContent.toLowerCase() === cat || (cat === 'all' && t.textContent === 'All'))
+    if (matchTab) matchTab.classList.add('active')
+
+    cards.forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.classList.remove('hidden')
+      } else {
+        card.classList.add('hidden')
+      }
+    })
+
+    // If filtering from sidebar, scroll to skills
+    scrollTo('skills')
+  }
+
+  // ── Expand/collapse skill card ───────────────────────────────────────
+  function toggleExpand(event, id) {
+    event.stopPropagation()
+    const card = document.getElementById(id)
+    card.classList.toggle('expanded')
+    const btn = card.querySelector('.expand-btn')
+    btn.textContent = card.classList.contains('expanded') ? '▴' : '▾'
+  }
+
+  // Click on card head also toggles
+  document.querySelectorAll('.skill-card-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const card = head.closest('.skill-card')
+      card.classList.toggle('expanded')
+      const btn = card.querySelector('.expand-btn')
+      if (btn) btn.textContent = card.classList.contains('expanded') ? '▴' : '▾'
+    })
+  })
+
+  // ── Copy command ─────────────────────────────────────────────────────
+  function copyCmd(event, cmd) {
+    event.stopPropagation()
+    const btn = event.target
+    navigator.clipboard.writeText(cmd).then(() => {
+      btn.textContent = 'copied!'
+      btn.classList.add('copied')
+      setTimeout(() => {
+        btn.textContent = 'copy'
+        btn.classList.remove('copied')
+      }, 1500)
+    })
+  }
+
+  // ── Search ───────────────────────────────────────────────────────────
+  const searchInput = document.getElementById('search-input')
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim()
+    const cards = document.querySelectorAll('.skill-card')
+
+    // Reset filter tabs
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'))
+    document.querySelector('.filter-tab').classList.add('active')
+
+    cards.forEach(card => {
+      const cmd = (card.dataset.cmd || '').toLowerCase()
+      const text = card.textContent.toLowerCase()
+      if (!q || cmd.includes(q) || text.includes(q)) {
+        card.classList.remove('hidden')
+      } else {
+        card.classList.add('hidden')
+      }
+    })
+  })
+
+  // ── Scroll helpers ───────────────────────────────────────────────────
+  function scrollTo(id) {
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+    // Update sidebar active state
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'))
+    const links = document.querySelectorAll('.sidebar-link')
+    links.forEach(l => {
+      if (l.getAttribute('onclick') && l.getAttribute('onclick').includes(id)) {
+        l.classList.add('active')
+      }
+    })
+  }
+
+  function scrollToSkill(id) {
+    const el = document.getElementById('skill-' + id) || document.getElementById('agent-' + id)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      el.classList.add('expanded')
+      const btn = el.querySelector('.expand-btn')
+      if (btn) btn.textContent = '▴'
+      el.style.borderColor = 'var(--accent)'
+      setTimeout(() => { el.style.borderColor = '' }, 2000)
+    }
+  }
+
+  // ── Sidebar active on scroll ─────────────────────────────────────────
+  const sections = ['workflow', 'skills', 'agents', 'rules', 'reflect']
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id
+        document.querySelectorAll('.sidebar-link').forEach(l => {
+          if (l.getAttribute('onclick') && l.getAttribute('onclick').includes(`'${id}'`)) {
+            document.querySelectorAll('.sidebar-link').forEach(x => x.classList.remove('active'))
+            l.classList.add('active')
+          }
+        })
+      }
+    })
+  }, { threshold: 0.3 })
+
+  sections.forEach(id => {
+    const el = document.getElementById(id)
+    if (el) observer.observe(el)
+  })
+</script>
+</body>
+</html>

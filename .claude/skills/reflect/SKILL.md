@@ -10,6 +10,22 @@ Do not defend the current config. Do not explain why it was written that way. Ju
 
 ---
 
+## Step 0 — Check Prior Failures
+
+Before diagnosing, read `.claude/reflect-log.md` if it exists.
+
+Scan the log for entries that describe a similar failure — same skill, same symptom, or same class of problem.
+
+**If this failure has been logged before:**
+- Note the previous entry (date, file, what was fixed)
+- Check the current config file to confirm whether that fix was actually applied
+- If the fix is **missing from the file**: it was agreed but never applied, or was reverted. Re-apply it immediately — skip to Step 4, no need to re-diagnose
+- If the fix is **present but the failure recurred**: the fix was insufficient or addressed the wrong root cause. Go through the full flow, but go one level deeper than last time
+
+**If this is a new failure:** proceed to Step 1.
+
+---
+
 ## Step 1 — Name what went wrong
 
 Write one sentence that describes the specific failure or feedback. Be concrete:

@@ -9,6 +9,41 @@ The plan is a shared artefact — it's how we track what's being built, in what 
 
 ---
 
+## Step 0 — Dependency & Risk Analysis (do this before writing the plan)
+
+Before ordering any steps, answer three questions explicitly:
+
+**1. What depends on what?**
+List the dependency chain between planned pieces of work. A step that another step relies on must come first. Common patterns:
+- DB schema before any code that reads/writes it
+- Auth layer before any route that requires ownership checks
+- Shared types/interfaces before both producer and consumer
+- External API integration before any feature that calls it
+
+If two steps have no dependency relationship, they can be done in any order — note that explicitly.
+
+**2. Where are the unknowns?**
+Any question from `/explore` that wasn't fully resolved is an unknown. Unknowns that could change the implementation become their own first step: a **spike step** — a short investigation that produces a decision, not working code. Don't bury an unresolved question in Step 3; surface it as Step 1.
+
+**3. What are the high-risk steps?**
+High-risk = steps touching auth, DB schema changes, external integrations, or areas flagged as fragile during exploration. These should come early — not because they're easy, but because discovering a problem in Step 1 is cheaper than discovering it in Step 5.
+
+Order the steps by: unresolved spikes first → high-risk/foundational next → lower-risk/dependent last.
+
+---
+
+## Confidence Check (do this after drafting the plan)
+
+Before presenting the plan, run this check on every step:
+
+> "If I started implementing this step right now, would I need to come back and ask a clarifying question?"
+
+If yes: either resolve the question in the plan itself (add a decision under Key Decisions), or convert the ambiguous part into a spike subtask at the top of that step.
+
+A plan with 3 well-understood steps is better than 7 steps with hidden assumptions.
+
+---
+
 ## What to produce
 
 A markdown plan document using the template below. Fill every section — don't skip any, don't add sections that aren't in the template.

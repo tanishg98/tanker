@@ -28,6 +28,21 @@ List every point that is unclear, unstated, or could reasonably be interpreted i
 
 ---
 
+## Large Codebase Strategy
+
+Before reading files, do a quick scope check:
+
+1. Run a broad Glob to count files in the relevant area (e.g. `src/**/*.ts`)
+2. If there are **more than 20 potentially relevant files**, do not read them all — scope first:
+   - Identify the **entry points** for this feature (the route handler, the page component, the CLI command — whatever the user interacts with first)
+   - Follow the call graph **2–3 levels deep** from the entry point
+   - Read files in that call graph only; note any files you're intentionally skipping and why
+3. If the codebase has a clear **module/package boundary** for this feature, stay within it
+
+This prevents burning context on irrelevant files and keeps the report useful. "Relevant files" means files you'd need to read or modify — not every file in the repo.
+
+---
+
 ## Rules
 
 - Do **not** write any implementation code, pseudocode, or solution sketches. Not even "here's how I'd approach it." That comes later.

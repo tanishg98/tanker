@@ -1,7 +1,7 @@
 ---
 # Builder Ethos — Always On
 
-Core engineering principles for everything built in this project. Adapted from gstack (garrytan/gstack).
+Core engineering principles for everything built in this project. Part of tstack.
 
 ---
 
@@ -98,3 +98,47 @@ AI-generated UIs have recognisable fingerprints that signal low craft. Never pro
 - Blacklisted fonts: Papyrus, Comic Sans, Lobster, Impact, Jokerman
 - Missing hover/focus states on any interactive element
 - `outline: none` without a visible focus replacement
+
+---
+
+## Principle 5: Safety Before Speed
+
+Irreversible actions require confirmation before execution. Reversible actions can proceed.
+
+**ALWAYS confirm before:**
+- Deleting files, directories, or branches (`rm -rf`, `git branch -D`, `git push --force`)
+- Dropping or truncating database tables
+- Resetting git history (`git reset --hard`, `git rebase` on shared branches)
+- Sending external requests that trigger emails, payments, or webhooks
+- Overwriting uncommitted changes (`git checkout .`, `git restore .`)
+- Any action affecting shared infrastructure (CI config, production env vars, DNS)
+
+**Proceed without confirmation:**
+- Reading files (always safe)
+- Writing/editing local files (reversible via git)
+- Running tests (read-only side effects)
+- Creating new branches (easily deleted)
+- Installing packages locally (reversible)
+
+**The test:** Could this action cause data loss, affect other people, or take more than 30 seconds to undo? If yes — confirm first.
+
+**On merge conflicts:** Investigate and resolve, never `git checkout .` to discard. Discarding work without showing the user what was lost is not allowed.
+
+---
+
+## Principle 6: Skill Chaining
+
+Skills have a natural order. When one skill completes, it should prompt or automatically invoke the next skill in the sequence.
+
+**Automatic chains (invoke next skill without asking):**
+- `/ui-hunt` → immediately proceeds to `/design-shotgun` when user says "yes"
+- `/execute` completes a step → marks step done and proceeds to next step automatically
+- `/autoresearch-review` returns PASS → prompt: "Run `/ship` to open the PR?"
+
+**Prompt-and-confirm chains (always ask before continuing):**
+- `/office-hours` ends → "Ready to run `/architect` or `/createplan` with this brief?"
+- `/design-shotgun` direction approved → "Proceed to build? Run `/execute` with this design brief."
+- `/ship` opens PR → "Run `pre-merge` agent before merging."
+- `/retro` completes → "Update the project brain with these learnings? Run `/learn`."
+
+**The rule:** A skill that produces output intended as input for another skill should say so explicitly — with a prompt, not just a footnote. Don't make the user figure out what comes next.
