@@ -16,7 +16,7 @@ tanker fixes that. It gives Claude a **defined role for every phase of a build**
 
 ## Autopilot Mode — `/cto`
 
-One command: brief → live product. tanker turns into your CTO with a pool of subagent engineers.
+One command: brief → live product. tanker turns into your CTO with a pool of subagent engineers AND human-in-the-loop gates so you stay in control of strategy and final QA.
 
 ```
 /cto "AI business analyst for Indian D2C sellers — connects 6 SaaS tools, chat with your data"
@@ -25,28 +25,59 @@ One command: brief → live product. tanker turns into your CTO with a pool of s
 What it does end-to-end:
 
 ```
-brain + memory load
-    └── github-scout (≥5 reference repos, what to copy, what to skip)
-        └── /grill → /benchmark? → /architect → /createplan → /advisor
-            └── PROVISION (parallel)
-                ├── gh-provisioner    → repo + branch protection + secrets
-                ├── supabase-provisioner → project + RLS schema + keys
-                ├── vercel-provisioner   → frontend deploy on every PR
-                └── railway-provisioner  → backend service + healthcheck
-            └── BUILD (parallel engineering pool)
-                ├── frontend-engineer → /design-shotgun → code → PR
-                ├── backend-engineer  → /backend-builder → PR
-                ├── data-engineer     → migrations → PR
-                └── content-engineer  → copy + SEO → PR
-            └── /pre-merge agent + /autoresearch-review per PR
-            └── /deploy → preview → smoke test → production with auto-rollback
-            └── /monitor (Sentry + Plausible + uptime)
-            └── outputs/<slug>/state.json checkpointed every phase (resumable)
+intake → state.json created
+  └── CONTEXT LOAD (parallel)
+      ├── .claude/brain.md (project memory)
+      ├── ~/.claude/projects/.../memory/ (auto-memory)
+      ├── brain-index — semantic retrieval over Obsidian vault
+      └── refs-index   — semantic retrieval over curated GitHub repos
+  └── github-scout: Tier 0 = curated refs, Tier 1 = wider GH search
+      └── /grill → /benchmark? → /prd  (exhaustive — every feature → screen,
+                                          every screen → all states, HTML mocks)
+          └── prd-reviewer agent → BLOCK / PASS WITH FIXES / PASS
+              └── 🛑 GATE 1 — Human review of the PRD bundle
+                  └── owner replies "approved" / "fix: …" / "abort"
+              └── /architect → /createplan → /advisor
+                  └── PROVISION (parallel)
+                      ├── gh-provisioner       repo + branch protection + secrets
+                      ├── supabase-provisioner project + RLS + Management API
+                      ├── vercel-provisioner   project linked to GH + env vars
+                      └── railway-provisioner  service + healthcheck (if backend)
+                  └── BUILD (parallel engineering pool)
+                      ├── frontend-engineer → /design-shotgun → code → PR
+                      ├── backend-engineer  → /backend-builder → PR
+                      ├── data-engineer     → versioned migrations → PR
+                      └── content-engineer  → copy + SEO → PR
+                  └── /pre-merge + /autoresearch-review per PR
+                  └── spin up LOCAL preview → mvp-reviewer agent
+                      └── 🛑 GATE 2 — Human review of the working MVP
+                          └── owner replies "approved" / "fix: …" / "abort"
+                  └── /deploy production → smoke test → live (auto-rollback on health fail)
+                  └── /monitor (Sentry + Plausible + uptime)
+                  └── final report: prod URL, repo URL, dashboards
 ```
 
-Why autopilot is production-grade: rails are architectural, not behavioral. Branch protection, versioned migrations, mandatory preview deploys, healthcheck-gated rollback, state checkpointing. Run `/cto --resume <slug>` from any session to continue.
+**Two human gates pre-qualified by review agents.** You only see work that has passed an automated check. Total owner attention: ~30 minutes (two reviews) for a deployed product. State checkpointed to `outputs/<slug>/state.json` so any session can `/cto --resume <slug>`.
 
-**Pre-flight:** `/vault-add github vercel railway supabase anthropic` — credentials live in `~/.claude/vault/credentials.json` (0600, never committed).
+Why autopilot is production-grade: rails are architectural, not behavioral. Branch protection, versioned migrations, mandatory preview deploys, healthcheck-gated rollback, state checkpointing — your local sandbox enforces all of these too.
+
+**Pre-flight (one-time, ~10 minutes):**
+
+```bash
+# Credentials for the provisioner agents
+/vault-add github vercel supabase anthropic
+# (railway / sentry / plausible if needed)
+
+# Local semantic retrieval over your Obsidian vault
+bash .claude/skills/brain-index/setup.sh                    # ~3 min, ~200MB
+~/.claude/brain-index/venv/bin/python \
+  .claude/skills/brain-index/index.py                       # ~5 min for ~1000 notes
+
+# Curated GitHub references that shape /cto's output toward your taste
+/cto-add-ref add https://github.com/<owner>/<repo> --why "..." --tags ...
+```
+
+Credentials live in `~/.claude/vault/credentials.json` (0600, never committed). Embeddings live in `~/.claude/brain-index/data/` (local-only, never leave the machine).
 
 ---
 
