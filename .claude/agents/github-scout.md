@@ -18,7 +18,30 @@ If the brief is unclear or scope is too broad to search effectively, ask one cla
 
 ---
 
-## Phase 1 — Search
+## Phase 0 — Curated references first
+
+Before doing any GitHub-wide search, query the owner's curated reference library. These are the repos *they've already vetted*. Treat them as priority signal.
+
+```bash
+# Local semantic search over the 'refs' collection (built by /cto-add-ref)
+if [ -d ~/.claude/brain-index/data ] && [ -f ~/.claude/brain-index/venv/bin/python ]; then
+  source ~/.claude/brain-index/venv/bin/activate
+  python .claude/skills/brain-index/query.py "<keywords from brief>" \
+    --collection refs --top 5 > /tmp/curated-refs-$$.md
+  cat /tmp/curated-refs-$$.md
+fi
+
+# Also list the manifest so the report can cite WHY each ref matters
+test -f ~/.claude/references/repos.yaml && cat ~/.claude/references/repos.yaml
+```
+
+Surface curated hits as **Tier 0** in the Reference Brief (highest priority). They're already filtered by the owner — don't second-guess them, just summarize what makes each one relevant to the current brief.
+
+If the curated library has zero relevant hits, proceed to wider GitHub search (Phase 1) as the only source. If it has matches, GitHub search becomes *supplementary* — looking for adjacent repos you might have missed, not the primary source.
+
+---
+
+## Phase 1 — Search GitHub (supplementary if curated hits exist)
 
 Use `gh search repos` (preferred — uses GitHub API, returns structured JSON) and `WebSearch` as a fallback for broader coverage.
 

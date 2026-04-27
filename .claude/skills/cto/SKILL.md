@@ -58,13 +58,33 @@ Create `outputs/<slug>/state.json`:
 
 ## Phase 1 — Context load (parallel)
 
-Three reads in parallel:
+Four reads in parallel:
 
 1. **Project brain** — read `.claude/brain.md` if it exists (in current project root or in cwd)
 2. **Auto-memory** — read `~/.claude/projects/-Users-...-<cwd>/memory/MEMORY.md` and any referenced files
-3. **Second brain (Obsidian vault)** — `Grep -r "<keywords from brief>" ~/Desktop/Obsidian/Brain/` — pull any notes that touch the brief
+3. **Second brain (semantic retrieval)** — if `~/.claude/brain-index/venv/bin/python` exists, use it; otherwise fall back to grep:
+   ```bash
+   if [ -f ~/.claude/brain-index/venv/bin/python ]; then
+     source ~/.claude/brain-index/venv/bin/activate
+     python .claude/skills/brain-index/query.py "<distilled keywords + concepts from brief>" \
+       --collection brain --top 8 > outputs/<slug>/context-brain.md
+   else
+     # fallback: keyword grep
+     grep -rli "<keywords>" ~/Desktop/Obsidian/Brain/ | head -10 > outputs/<slug>/context-brain-files.txt
+   fi
+   ```
+4. **Curated references (semantic retrieval)** — same engine, different collection:
+   ```bash
+   if [ -f ~/.claude/brain-index/venv/bin/python ]; then
+     source ~/.claude/brain-index/venv/bin/activate
+     python .claude/skills/brain-index/query.py "<keywords + concepts>" \
+       --collection refs --top 5 > outputs/<slug>/context-refs.md
+   fi
+   ```
 
-Write the relevant excerpts to `outputs/<slug>/context.md`. **Do not include private personal notes verbatim** — paraphrase. The vault may have private context the user doesn't want in a repo.
+Aggregate findings into `outputs/<slug>/context.md`. **Do not include private personal notes verbatim** — paraphrase. The Obsidian vault may have private context the user doesn't want in a repo.
+
+If the brain index doesn't exist yet, surface to user: "no brain index found — run `/brain-index` once to enable semantic retrieval. Falling back to keyword grep for this run."
 
 Mark `phases_done: ["intake", "context"]`.
 
