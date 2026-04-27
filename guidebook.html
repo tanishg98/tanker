@@ -255,6 +255,8 @@
   <ol>
     <li><a href="#what">What tanker is</a></li>
     <li><a href="#autopilot">Autopilot mode (/cto)</a></li>
+    <li><a href="#owners-loop">The owner's loop</a></li>
+    <li><a href="#manual-vs-auto">Manual vs autopilot</a></li>
     <li><a href="#vault">The vault</a></li>
     <li><a href="#new-project">New project flow (manual)</a></li>
     <li><a href="#feature-flow">Feature on existing product</a></li>
@@ -385,6 +387,85 @@
 
   <div class="callout">
     <strong>Pre-flight before first run:</strong> register credentials with <code>/vault-add github</code>, <code>/vault-add vercel</code>, <code>/vault-add supabase</code>, <code>/vault-add anthropic</code> (and railway / sentry / plausible if needed). Provisioners read from the vault — never inline tokens, never paste them in chat.
+  </div>
+</section>
+
+<section id="owners-loop">
+  <p class="section-tag">02b · The pattern</p>
+  <h2>The owner's loop — three moments</h2>
+  <p>You only do three things across the entire build. Everything else is automated.</p>
+
+  <div class="two-col" style="grid-template-columns: 1fr; gap: 16px;">
+    <div>
+      <h4>Moment 1 — Trigger</h4>
+      <p style="margin: 0; font-size: 17px;"><strong>One sentence.</strong> Type <code>/cto "&lt;your idea&gt;"</code>. Walk away. Autopilot loads context, scans references, drafts a PRD, and a review agent sanity-checks it.</p>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 14px;">Time: 30 seconds.</p>
+    </div>
+    <div>
+      <h4>Moment 2 — Review the PRD</h4>
+      <p style="margin: 0; font-size: 17px;"><strong>You see it only after it passed the prd-reviewer agent.</strong> Open <code>outputs/&lt;slug&gt;/prd/index.html</code> — clickable wireframes for every screen, every state, plus the narrative PRD. Reply <code>approved</code> or <code>fix: &lt;feedback&gt;</code>.</p>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 14px;">Time: 15–20 minutes of careful reading. You decide what gets built.</p>
+    </div>
+    <div>
+      <h4>Moment 3 — Review the MVP</h4>
+      <p style="margin: 0; font-size: 17px;"><strong>You see it only after it passed the mvp-reviewer agent.</strong> Open <code>http://localhost:&lt;port&gt;</code>. Real working build. Click through every flow. Reply <code>approved</code> or <code>fix: &lt;feedback&gt;</code>. On approval, autopilot ships to production.</p>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 14px;">Time: 10–15 minutes of clicking. You're the final QA.</p>
+    </div>
+  </div>
+
+  <p class="rule-of-thumb">~30 minutes of head-of-product attention. Live product at the end. Reviewable artifacts at every stage.</p>
+</section>
+
+<section id="manual-vs-auto">
+  <p class="section-tag">02c · Comparison</p>
+  <h2>Manual workflow vs autopilot</h2>
+  <p>Both still exist. Use whichever fits the situation. The difference is who drives.</p>
+
+  <table>
+    <thead>
+      <tr><th style="width: 28%;">Aspect</th><th>Manual flow</th><th>Autopilot (<code>/cto</code>)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Commands you type</strong></td>
+        <td>10–14 slash commands, in order, one at a time</td>
+        <td>1 command + 2 review responses</td>
+      </tr>
+      <tr>
+        <td><strong>Owner attention</strong></td>
+        <td>4–8 hours of active driving + context-switching</td>
+        <td>~30 minutes of focused product review</td>
+      </tr>
+      <tr>
+        <td><strong>Infra setup</strong></td>
+        <td>Manual: create GitHub repo, Supabase project, Vercel project, Railway service, push secrets, configure each</td>
+        <td>Automatic: 4 provisioner agents in parallel via vault credentials</td>
+      </tr>
+      <tr>
+        <td><strong>PRD format</strong></td>
+        <td><code>/architect</code> output (technical) — no exhaustive screen list, no wireframes</td>
+        <td><code>/prd</code> output: 12 mandatory sections, every feature → screen, every screen → all states, HTML wireframes per screen + landing</td>
+      </tr>
+      <tr>
+        <td><strong>Quality gates</strong></td>
+        <td>You remember to run <code>/autoresearch-review</code> before merging. <code>pre-merge</code> agent before PR.</td>
+        <td>Built into the loop — <code>pre-merge</code> on every PR, <code>prd-reviewer</code> + <code>mvp-reviewer</code> auto-pre-qualify human gates</td>
+      </tr>
+      <tr>
+        <td><strong>Resumability</strong></td>
+        <td>Reconstruct via <code>/context-restore</code> — re-read context.md + git log</td>
+        <td><code>state.json</code> checkpointed every phase. <code>/cto --resume &lt;slug&gt;</code> picks up exactly where it stopped.</td>
+      </tr>
+      <tr>
+        <td><strong>Best for</strong></td>
+        <td>Existing codebase work, surgical fixes, when you want full control of every decision</td>
+        <td>New products, greenfield builds, when the goal is "live product by end of day with my taste applied at the right gates"</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Both flows share the same primitives:</strong> the 32 skills, the 4 review agents, the 3-layer memory, the always-on rules. Autopilot is the orchestrator that strings them together — manual is you doing it yourself. Same parts, different driver.
   </div>
 </section>
 
