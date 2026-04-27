@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>tanker — the guidebook</title>
+<meta name="description" content="A practical guide to using tanker: skills, agents, memory, and the right flow for every type of build." />
+<style>
+  :root {
+    --ink: #0f1115;
+    --ink-soft: #3b4252;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --bg: #fafaf7;
+    --panel: #ffffff;
+    --accent: #b45309;
+    --accent-soft: #fef3c7;
+    --code-bg: #f4f4ee;
+    --max: 820px;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 56px 28px 120px;
+  }
+  header.top {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 32px;
+    margin-bottom: 48px;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.1;
+    margin: 0 0 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0;
+  }
+  nav.toc {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin: 40px 0 56px;
+  }
+  nav.toc h2 {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  nav.toc ol {
+    margin: 0;
+    padding-left: 20px;
+    columns: 2;
+    column-gap: 32px;
+  }
+  nav.toc li { margin: 4px 0; break-inside: avoid; }
+  nav.toc a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  nav.toc a:hover,
+  nav.toc a:focus { border-bottom-color: var(--accent); outline: none; }
+  section { margin: 64px 0; }
+  section > h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+  }
+  section > .section-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+  h3 {
+    font-size: 18px;
+    margin: 32px 0 10px;
+    font-weight: 600;
+  }
+  p { margin: 0 0 16px; }
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+  a:hover { color: var(--accent); }
+  code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: var(--ink);
+    color: #e8e8e3;
+    padding: 18px 22px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 20px 0;
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+  .flow {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .flow .flow-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+  .flow code {
+    background: transparent;
+    padding: 0;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .flow .arrow { color: var(--muted); margin: 0 4px; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    font-weight: 600;
+    background: var(--panel);
+    border-bottom-width: 2px;
+  }
+  td code { font-size: 12.5px; }
+  ul.clean { padding-left: 20px; }
+  ul.clean li { margin: 6px 0; }
+  .callout {
+    background: var(--accent-soft);
+    border: 1px solid #fcd34d;
+    padding: 16px 20px;
+    border-radius: 4px;
+    margin: 24px 0;
+    font-size: 15px;
+  }
+  .callout strong { color: var(--accent); }
+  .rule-of-thumb {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-style: italic;
+    color: var(--ink-soft);
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 20px;
+    margin: 24px 0;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 24px 0;
+  }
+  .two-col > div {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+    border-radius: 4px;
+  }
+  .two-col h4 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  footer.bottom {
+    border-top: 1px solid var(--line);
+    margin-top: 80px;
+    padding-top: 24px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 32px 20px 80px; }
+    nav.toc ol { columns: 1; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-padding-top: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="brand">tanker · a builder kit by tg</p>
+  <h1>The Guidebook</h1>
+  <p class="lede">How to use tanker correctly — what every skill does, when to use it, the right flow for a new project, and how the memory system keeps Claude coherent across sessions.</p>
+</header>
+
+<nav class="toc" aria-label="Table of contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#what">What tanker is</a></li>
+    <li><a href="#simple-use">Simple how-to-use</a></li>
+    <li><a href="#autopilot">Autopilot mode (/cto)</a></li>
+    <li><a href="#owners-loop">The owner's loop</a></li>
+    <li><a href="#manual-vs-auto">Manual vs autopilot</a></li>
+    <li><a href="#vault">The vault</a></li>
+    <li><a href="#new-project">New project flow (manual)</a></li>
+    <li><a href="#feature-flow">Feature on existing product</a></li>
+    <li><a href="#bug-flow">Bug fix flow</a></li>
+    <li><a href="#static-flow">Static site flow</a></li>
+    <li><a href="#skills">Skills reference</a></li>
+    <li><a href="#agents">Agents reference</a></li>
+    <li><a href="#memory">The memory system</a></li>
+    <li><a href="#chaining">Skill chaining</a></li>
+    <li><a href="#rules">Always-on rules</a></li>
+    <li><a href="#anti">Anti-patterns to avoid</a></li>
+    <li><a href="#quick">Quick reference card</a></li>
+  </ol>
+</nav>
+
+<section id="what">
+  <p class="section-tag">01 · Overview</p>
+  <h2>What tanker is</h2>
+  <p>tanker is a structured set of Claude Code skills, agents, and rules. It replaces ad-hoc prompting ("please write me X") with a repeatable pipeline where each phase of a build has a defined skill, a quality gate, and an explicit handoff to the next step.</p>
+  <p>The core premise: Claude is capable, but without structure every session starts from scratch. tanker gives Claude a <em>role for every phase</em> — product thinking, architecture, planning, execution, review, ship, monitor — plus a persistent project brain that remembers conventions, decisions, and landmines across sessions.</p>
+  <p class="rule-of-thumb">If there's a skill for the phase you're in, use it. Skipping to raw code is how you get AI slop.</p>
+  <p>tanker now also runs in <strong>autopilot</strong> — one command, brief to live product. See the next section. The manual phase-by-phase flow still exists for cases where you want hands-on control.</p>
+</section>
+
+<section id="simple-use">
+  <p class="section-tag">01b · Quick start</p>
+  <h2>Simple how-to-use</h2>
+  <p>The whole system, reduced to what you actually type and read. No jargon.</p>
+
+  <h3>One-time setup (run these once per machine)</h3>
+  <pre><code># 1. Tell tanker your service tokens (one prompt per service, never echoed)
+/vault-add github
+/vault-add vercel
+/vault-add supabase
+/vault-add anthropic
+
+# 2. Index your Obsidian vault so /cto can pull your real context
+bash .claude/skills/brain-index/setup.sh
+~/.claude/brain-index/venv/bin/python .claude/skills/brain-index/index.py
+
+# 3. (Optional) Add a few GitHub repos that inspire you
+/cto-add-ref add https://github.com/vercel/next.js \
+  --why "Canonical Next.js patterns" --tags nextjs,frontend
+/cto-add-ref add https://github.com/supabase/supabase \
+  --why "Auth + RLS done right" --tags supabase,auth</code></pre>
+
+  <h3>Daily — the only three commands you'll type</h3>
+  <table>
+    <thead><tr><th>Command</th><th>What it does</th><th>When to use</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>/cto "&lt;your idea in one sentence&gt;"</code></td>
+        <td>Kicks off the full autopilot. tanker loads your brain, drafts a PRD, builds + deploys the product.</td>
+        <td>Whenever you have a new product or major feature to build.</td>
+      </tr>
+      <tr>
+        <td>Reply <code>approved</code> or <code>fix: &lt;feedback&gt;</code> or <code>abort</code></td>
+        <td>Responds to either the PRD gate or the MVP gate. tanker keeps going on approved, retries with your feedback on fix, stops on abort.</td>
+        <td>When tanker says <em>"✋ ready for review"</em> at one of the two human gates.</td>
+      </tr>
+      <tr>
+        <td><code>/cto --resume &lt;slug&gt;</code></td>
+        <td>Picks up an in-progress build from where it stopped (state.json knows the phase).</td>
+        <td>Coming back the next day, or after closing the terminal mid-build.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>What you'll see when tanker pings you</h3>
+  <pre><code>✋ PRD ready for review
+Open: outputs/d2c-os-v1/prd/index.html
+Read: outputs/d2c-os-v1/prd/prd.md
+
+prd-reviewer verdict: PASS
+
+When you're done reviewing, reply with one of:
+  approved             — proceed to /architect and the build
+  fix: &lt;feedback&gt;       — re-run /prd with this feedback
+  abort                — stop /cto, keep state.json for resume later</code></pre>
+  <p>Open the HTML file in your browser. Every screen, every state, every feature is there as a clickable wireframe + narrative. Click around for 15–20 minutes. Then come back to the terminal and reply.</p>
+
+  <h3>Adding to your knowledge over time</h3>
+  <table>
+    <thead><tr><th>You did this…</th><th>Run this to teach tanker</th></tr></thead>
+    <tbody>
+      <tr><td>Wrote new notes in Obsidian</td><td><code>~/.claude/brain-index/venv/bin/python .claude/skills/brain-index/index.py</code> (re-indexes only changed chunks — fast)</td></tr>
+      <tr><td>Found a GitHub repo worth copying patterns from</td><td><code>/cto-add-ref add &lt;url&gt; --why "..." --tags ...</code></td></tr>
+      <tr><td>Made a key decision in a session</td><td><code>/learn</code> — writes to <code>.claude/brain.md</code></td></tr>
+      <tr><td>Want to brief a fresh session quickly</td><td><code>/remember</code> — injects brain into <code>CLAUDE.md</code> so it auto-loads next time</td></tr>
+      <tr><td>Finished a sprint or week</td><td><code>/retro</code> — captures what shipped, what broke, what slowed you down</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>The one rule:</strong> when tanker stops at a gate and asks for review, actually review it. The whole system depends on you being the head of product at those two moments. Everything else is automated so you have the attention to spend there.
+  </div>
+</section>
+
+<section id="autopilot">
+  <p class="section-tag">02 · Autopilot</p>
+  <h2>Autopilot mode — <code>/cto</code></h2>
+  <p>tanker had all the building blocks (32 skills, 4 review agents, three-layer memory) but no top-level orchestrator that strung them together end-to-end. <code>/cto</code> closes that gap. It is the autonomous CTO layer — you give it a one-line product brief, it produces a deployed product.</p>
+
+  <div class="flow">
+    <p class="flow-label">one command</p>
+    <code>/cto "AI business analyst for Indian D2C sellers — connects 6 SaaS tools, chat with your data"</code>
+  </div>
+
+  <h3>What it does, end to end</h3>
+  <pre><code>brief in
+  └── intake → state.json created (outputs/&lt;slug&gt;/state.json)
+      └── context load: brain.md + memory + Obsidian vault search (parallel)
+          └── github-scout agent → ≥5 reference repos, what to copy, what to skip
+              └── /grill → /benchmark?
+              └── /prd  → exhaustive PRD + HTML wireframes per screen + landing
+                  └── prd-reviewer agent → PASS / PASS WITH FIXES / BLOCK
+                      └── BLOCK → /prd retry (max 2)
+                  └── 🛑 HARD STOP — Human review gate 1
+                      └── owner reads outputs/&lt;slug&gt;/prd/index.html
+                      └── owner replies "approved" / "fix: ..." / "abort"
+              └── /architect → /createplan → /advisor
+                  └── PROVISION (parallel)
+                      ├── gh-provisioner       repo + branch protection + secrets
+                      ├── supabase-provisioner project + RLS schema (Management API)
+                      ├── vercel-provisioner   project linked to GH + env vars
+                      └── railway-provisioner  service + healthcheck (if backend)
+                  └── BUILD (parallel engineering pool)
+                      ├── frontend-engineer  → /design-shotgun → code → PR
+                      ├── backend-engineer   → /backend-builder → PR
+                      ├── data-engineer      → versioned migrations → PR
+                      └── content-engineer   → copy + SEO + README → PR
+                  └── per PR: pre-merge agent + /autoresearch-review
+                      └── on PASS: gh pr merge --squash
+                      └── on FAIL: dispatch the engineer again with the report (max 2 retries)
+                  └── spin up LOCAL preview (npm run dev / uvicorn / etc)
+                      └── mvp-reviewer agent → PASS / PASS WITH FIXES / BLOCK
+                          └── BLOCK → re-dispatch build subagents (max 2)
+                      └── 🛑 HARD STOP — Human review gate 2
+                          └── owner opens http://localhost:&lt;port&gt;
+                          └── owner replies "approved" / "fix: ..." / "abort"
+                  └── /deploy production → smoke test → live
+                      └── healthcheck fails → auto-rollback
+                  └── /monitor (Sentry + Plausible + uptime)
+                  └── final report: prod URL, repo URL, dashboards</code></pre>
+
+  <h3>Human-in-the-loop gates</h3>
+  <p>The owner is the <strong>head of product</strong> in this loop. Autopilot's job is to never bring the owner half-finished work — review agents pre-qualify both gates so manual review is always against complete, working artifacts.</p>
+  <table>
+    <thead><tr><th>Gate</th><th>Pre-check (auto)</th><th>Owner reviews</th><th>Approve action</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Gate 1 — PRD</strong></td>
+        <td><code>prd-reviewer</code> agent: every feature → screen, every screen → all states, no AI slop in mocks, ≥3 open questions, no hand-wave language</td>
+        <td><code>outputs/&lt;slug&gt;/prd/index.html</code> + <code>prd.md</code></td>
+        <td>Reply <code>approved</code> → <code>/cto</code> proceeds to <code>/architect</code>; reply <code>fix: ...</code> → re-run <code>/prd</code> with feedback</td>
+      </tr>
+      <tr>
+        <td><strong>Gate 2 — Local MVP</strong></td>
+        <td><code>mvp-reviewer</code> agent: every screen 200s, golden paths walk, all states render, responsive at 375/768/1440px, no console errors</td>
+        <td>Live local URL: <code>http://localhost:&lt;port&gt;</code></td>
+        <td>Reply <code>approved</code> → <code>/cto</code> deploys to production; reply <code>fix: ...</code> → re-dispatches build subagents</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>Why two gates and not more:</strong> the PRD gate catches strategic mistakes (wrong product) when fixing them is cheap. The MVP gate catches build mistakes (wrong UX, missed features) before any production traffic. Anything else (review every PR, review every screen as it's built) drowns the owner in noise. Two gates, both pre-qualified, is the right ratio.
+  </div>
+
+  <h3>Why autopilot is production-grade (not just throwaway)</h3>
+  <p>The safety isn't "stop and ask at every step" — it's that <strong>every step is reversible and observed</strong>. The rails are architectural:</p>
+  <ul class="clean">
+    <li><strong>Branch protection on main</strong> — provisioner sets it on day one. Direct pushes blocked. Every change goes through a PR.</li>
+    <li><strong>Versioned migrations only</strong> — schema changes live in <code>supabase/migrations/&lt;ts&gt;_*.sql</code>. Reversible by design.</li>
+    <li><strong>Mandatory preview deploys</strong> — every PR gets a unique Vercel preview URL before it can touch prod.</li>
+    <li><strong>Healthcheck-gated rollback</strong> — Railway and Vercel auto-revert on a failed <code>/health</code> response.</li>
+    <li><strong>State.json checkpointed every phase</strong> — resume any session with <code>/cto --resume &lt;slug&gt;</code>. Never lose work to a session timeout or a failed step.</li>
+    <li><strong>pre-merge agent before any merge</strong> — autoresearch + review run before main is touched. No "let's hope it's fine."</li>
+  </ul>
+
+  <h3>Resume + status</h3>
+  <table>
+    <thead><tr><th>Command</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td><code>/cto "&lt;brief&gt;"</code></td><td>Fresh run. Default mode is autopilot.</td></tr>
+      <tr><td><code>/cto "&lt;brief&gt;" --gated</code></td><td>Same flow, but pauses at each phase boundary for human approval.</td></tr>
+      <tr><td><code>/cto --resume &lt;slug&gt;</code></td><td>Reads <code>state.json</code>, skips done phases, continues from the next.</td></tr>
+      <tr><td><code>/cto --status &lt;slug&gt;</code></td><td>Read-only summary — phase, infra URLs, PR statuses, errors.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Failure handling</h3>
+  <table>
+    <thead><tr><th>If this happens…</th><th>autopilot does this</th></tr></thead>
+    <tbody>
+      <tr><td>Vault key missing</td><td>STOP. Prompt to <code>/vault-add &lt;service&gt;</code> and resume.</td></tr>
+      <tr><td>Provisioner API failure</td><td>STOP. Surface the API error verbatim. No blind retry.</td></tr>
+      <tr><td>Build subagent produces broken code</td><td><code>pre-merge</code> catches it; subagent is re-dispatched with the failure report. Max 2 retries.</td></tr>
+      <tr><td>Deploy healthcheck fails</td><td>Auto-rollback to last green deploy. Surface logs.</td></tr>
+      <tr><td><code>/advisor</code> flags CRITICAL issue</td><td>STOP after planning phase. Owner reviews — do not auto-apply cross-model edits over author-model output.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Pre-flight before first run:</strong> register credentials with <code>/vault-add github</code>, <code>/vault-add vercel</code>, <code>/vault-add supabase</code>, <code>/vault-add anthropic</code> (and railway / sentry / plausible if needed). Provisioners read from the vault — never inline tokens, never paste them in chat.
+  </div>
+</section>
+
+<section id="owners-loop">
+  <p class="section-tag">02b · The pattern</p>
+  <h2>The owner's loop — three moments</h2>
+  <p>You only do three things across the entire build. Everything else is automated.</p>
+
+  <div class="two-col" style="grid-template-columns: 1fr; gap: 16px;">
+    <div>
+      <h4>Moment 1 — Trigger</h4>
+      <p style="margin: 0; font-size: 17px;"><strong>One sentence.</strong> Type <code>/cto "&lt;your idea&gt;"</code>. Walk away. Autopilot loads context, scans references, drafts a PRD, and a review agent sanity-checks it.</p>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 14px;">Time: 30 seconds.</p>
+    </div>
+    <div>
+      <h4>Moment 2 — Review the PRD</h4>
+      <p style="margin: 0; font-size: 17px;"><strong>You see it only after it passed the prd-reviewer agent.</strong> Open <code>outputs/&lt;slug&gt;/prd/index.html</code> — clickable wireframes for every screen, every state, plus the narrative PRD. Reply <code>approved</code> or <code>fix: &lt;feedback&gt;</code>.</p>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 14px;">Time: 15–20 minutes of careful reading. You decide what gets built.</p>
+    </div>
+    <div>
+      <h4>Moment 3 — Review the MVP</h4>
+      <p style="margin: 0; font-size: 17px;"><strong>You see it only after it passed the mvp-reviewer agent.</strong> Open <code>http://localhost:&lt;port&gt;</code>. Real working build. Click through every flow. Reply <code>approved</code> or <code>fix: &lt;feedback&gt;</code>. On approval, autopilot ships to production.</p>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 14px;">Time: 10–15 minutes of clicking. You're the final QA.</p>
+    </div>
+  </div>
+
+  <p class="rule-of-thumb">~30 minutes of head-of-product attention. Live product at the end. Reviewable artifacts at every stage.</p>
+</section>
+
+<section id="manual-vs-auto">
+  <p class="section-tag">02c · Comparison</p>
+  <h2>Manual workflow vs autopilot</h2>
+  <p>Both still exist. Use whichever fits the situation. The difference is who drives.</p>
+
+  <table>
+    <thead>
+      <tr><th style="width: 28%;">Aspect</th><th>Manual flow</th><th>Autopilot (<code>/cto</code>)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Commands you type</strong></td>
+        <td>10–14 slash commands, in order, one at a time</td>
+        <td>1 command + 2 review responses</td>
+      </tr>
+      <tr>
+        <td><strong>Owner attention</strong></td>
+        <td>4–8 hours of active driving + context-switching</td>
+        <td>~30 minutes of focused product review</td>
+      </tr>
+      <tr>
+        <td><strong>Infra setup</strong></td>
+        <td>Manual: create GitHub repo, Supabase project, Vercel project, Railway service, push secrets, configure each</td>
+        <td>Automatic: 4 provisioner agents in parallel via vault credentials</td>
+      </tr>
+      <tr>
+        <td><strong>PRD format</strong></td>
+        <td><code>/architect</code> output (technical) — no exhaustive screen list, no wireframes</td>
+        <td><code>/prd</code> output: 12 mandatory sections, every feature → screen, every screen → all states, HTML wireframes per screen + landing</td>
+      </tr>
+      <tr>
+        <td><strong>Quality gates</strong></td>
+        <td>You remember to run <code>/autoresearch-review</code> before merging. <code>pre-merge</code> agent before PR.</td>
+        <td>Built into the loop — <code>pre-merge</code> on every PR, <code>prd-reviewer</code> + <code>mvp-reviewer</code> auto-pre-qualify human gates</td>
+      </tr>
+      <tr>
+        <td><strong>Resumability</strong></td>
+        <td>Reconstruct via <code>/context-restore</code> — re-read context.md + git log</td>
+        <td><code>state.json</code> checkpointed every phase. <code>/cto --resume &lt;slug&gt;</code> picks up exactly where it stopped.</td>
+      </tr>
+      <tr>
+        <td><strong>Best for</strong></td>
+        <td>Existing codebase work, surgical fixes, when you want full control of every decision</td>
+        <td>New products, greenfield builds, when the goal is "live product by end of day with my taste applied at the right gates"</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Both flows share the same primitives:</strong> the 32 skills, the 4 review agents, the 3-layer memory, the always-on rules. Autopilot is the orchestrator that strings them together — manual is you doing it yourself. Same parts, different driver.
+  </div>
+</section>
+
+<section id="vault">
+  <p class="section-tag">03 · System</p>
+  <h2>The vault — credentials for autopilot</h2>
+  <p>For autopilot to provision real infrastructure, it needs credentials. tanker stores them locally at <code>~/.claude/vault/credentials.json</code> with strict permissions and never logs the values.</p>
+
+  <table>
+    <thead><tr><th>Property</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Location</td><td><code>~/.claude/vault/credentials.json</code> (outside any project repo)</td></tr>
+      <tr><td>Permissions</td><td>Directory <code>0700</code>, file <code>0600</code> — owner read/write only</td></tr>
+      <tr><td>Format</td><td>JSON, namespaced by service: <code>.github.pat</code>, <code>.vercel.token</code>, <code>.supabase.access_token</code>…</td></tr>
+      <tr><td>Per-project keys</td><td>e.g. <code>.supabase.&lt;slug&gt;.url</code> — each project gets its own Supabase keys when provisioned</td></tr>
+      <tr><td>Read by</td><td>Provisioner agents only, via <code>jq</code>. Never echoed to chat, never put in commits.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Adding a credential</h3>
+  <p>Use the <code>/vault-add</code> skill. It prompts you to open the file directly in your editor or accept input through a hidden shell prompt — the value never enters the chat transcript.</p>
+  <pre><code>/vault-add github
+# → directs you to github.com/settings/tokens (scopes: repo, workflow, delete_repo)
+# → confirms the key was written without ever printing the value
+# → optionally runs `gh auth status` to verify the token works</code></pre>
+
+  <h3>Supported services</h3>
+  <table>
+    <thead><tr><th>Service</th><th>Required keys</th><th>Used by</th></tr></thead>
+    <tbody>
+      <tr><td>github</td><td><code>pat</code>, <code>user</code></td><td>gh-provisioner</td></tr>
+      <tr><td>vercel</td><td><code>token</code>, <code>team_id</code> (optional)</td><td>vercel-provisioner</td></tr>
+      <tr><td>railway</td><td><code>token</code></td><td>railway-provisioner</td></tr>
+      <tr><td>supabase</td><td><code>access_token</code>, <code>org_id</code></td><td>supabase-provisioner</td></tr>
+      <tr><td>cloudflare</td><td><code>api_token</code>, <code>account_id</code></td><td>(future) cloudflare-provisioner</td></tr>
+      <tr><td>anthropic</td><td><code>api_key</code></td><td>App env vars (Haiku/Sonnet/Opus chain)</td></tr>
+      <tr><td>openai, stripe, resend, sentry, plausible</td><td>varies</td><td>App env vars + monitoring</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>If a credential ever leaks:</strong> rotate at the provider <em>first</em>, then update vault, then audit recent agent outputs. Never assume "no one will see the log" — rotate.
+  </div>
+</section>
+
+<section id="new-project">
+  <p class="section-tag">04 · Flow</p>
+  <h2>New project — the full manual pipeline</h2>
+  <p>Use this when you're building something new and you want hands-on control over each phase. For one-shot autopilot, use <code>/cto</code> instead — it runs the same chain automatically with provisioner subagents handling infra.</p>
+  <div class="flow">
+    <p class="flow-label">the full chain</p>
+    <code>/grill</code><span class="arrow">→</span>
+    <code>/ui-hunt</code><span class="arrow">→</span>
+    <code>/architect</code><span class="arrow">→</span>
+    <code>/createplan</code><span class="arrow">→</span>
+    <code>/execute</code><span class="arrow">→</span>
+    <code>/autoresearch-review</code><span class="arrow">→</span>
+    <code>/ship</code><span class="arrow">→</span>
+    <code>/deploy</code><span class="arrow">→</span>
+    <code>/monitor</code>
+  </div>
+  <h3>Phase-by-phase</h3>
+  <table>
+    <thead><tr><th>Phase</th><th>Skill</th><th>What it produces</th></tr></thead>
+    <tbody>
+      <tr><td>Challenge the idea</td><td><code>/grill</code></td><td>6 YC-style forcing questions — stops you from building the wrong thing</td></tr>
+      <tr><td>Find references</td><td><code>/ui-hunt</code></td><td>Reference Brief of best-in-class products in your category</td></tr>
+      <tr><td>Design directions</td><td><code>/design-shotgun</code></td><td>4 working HTML/CSS prototypes — pick one</td></tr>
+      <tr><td>System design</td><td><code>/architect</code></td><td>System diagram, component breakdown, API contracts, data model</td></tr>
+      <tr><td>Step-by-step plan</td><td><code>/createplan</code></td><td>Markdown plan with verifiable steps + risks</td></tr>
+      <tr><td>Build</td><td><code>/execute</code></td><td>Implements one step at a time, updates plan tracker</td></tr>
+      <tr><td>Pre-merge review</td><td><code>/autoresearch-review</code></td><td>Karpathy-style bug analysis before shipping</td></tr>
+      <tr><td>Release</td><td><code>/ship</code></td><td>Sync, test, push, open structured PR</td></tr>
+      <tr><td>Deploy</td><td><code>/deploy</code></td><td>Vercel / Railway / Fly / Docker setup with health checks</td></tr>
+      <tr><td>Observability</td><td><code>/monitor</code></td><td>Error tracking, analytics, uptime monitoring</td></tr>
+      <tr><td>Save the lessons</td><td><code>/learn</code></td><td>Writes conventions + pitfalls to <code>.claude/brain.md</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>Minimum viable flow:</strong> <code>/grill</code> → <code>/architect</code> → <code>/createplan</code> → <code>/execute</code> → <code>/autoresearch-review</code>. The rest become essential as you approach ship.
+  </div>
+</section>
+
+<section id="feature-flow">
+  <p class="section-tag">03 · Flow</p>
+  <h2>Feature on existing product</h2>
+  <p>Skip the full pipeline. You already have architecture and conventions locked in the project brain.</p>
+  <div class="flow">
+    <p class="flow-label">feature chain</p>
+    <code>/createplan</code><span class="arrow">→</span>
+    <code>/execute</code><span class="arrow">→</span>
+    <code>/autoresearch-review</code><span class="arrow">→</span>
+    <code>/ship</code>
+  </div>
+  <p>If the feature is large enough that you're unsure about design, insert <code>/architect</code> before <code>/createplan</code>. If UI is involved and you have no reference, <code>/ui-hunt</code> first.</p>
+</section>
+
+<section id="bug-flow">
+  <p class="section-tag">04 · Flow</p>
+  <h2>Bug fix with unknown cause</h2>
+  <div class="flow">
+    <p class="flow-label">bug chain</p>
+    <code>/debug</code><span class="arrow">→</span>
+    <code>/test-gen</code><span class="arrow">→</span>
+    <code>/autoresearch-review</code><span class="arrow">→</span>
+    <code>/ship</code>
+  </div>
+  <p><code>/debug</code> traces symptom → root cause using a structured elimination method (no guess-and-check). <code>/test-gen</code> writes a regression test so the bug can't come back silently.</p>
+</section>
+
+<section id="static-flow">
+  <p class="section-tag">05 · Flow</p>
+  <h2>Static site or landing page</h2>
+  <div class="flow">
+    <p class="flow-label">static site chain</p>
+    <code>/ui-hunt</code><span class="arrow">→</span>
+    <code>/design-shotgun</code><span class="arrow">→</span>
+    <code>/static-site-replicator</code><span class="arrow">→</span>
+    <code>site-eval agent</code>
+  </div>
+  <p>The <code>site-eval</code> agent is <strong>mandatory</strong> before declaring a static site done. It audits visual parity, brand consistency, animations, responsiveness, and accessibility — returns PASS / CONDITIONAL / FAIL.</p>
+</section>
+
+<section id="skills">
+  <p class="section-tag">06 · Reference</p>
+  <h2>All skills, grouped by phase</h2>
+  <h3>Autopilot</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/cto</code> <strong>NEW</strong></td><td>Top-level orchestrator with HITL gates. Brief → live product. Pre-qualifies work via review agents, then stops for owner approval at PRD and local-MVP. State checkpointed for resume.</td></tr>
+      <tr><td><code>/prd</code> <strong>NEW</strong></td><td>Exhaustive product-facing PRD: every feature mapped to screens, every screen with all states (empty/loading/populated/error), landing page outline, lightweight HTML wireframes per screen + landing.html. The artifact owner reviews at <strong>Gate 1</strong>.</td></tr>
+      <tr><td><code>/vault-add</code> <strong>NEW</strong></td><td>Registers a credential in <code>~/.claude/vault/credentials.json</code> (0600). Never logs values. Required before <code>/cto</code> can provision real infra.</td></tr>
+    </tbody>
+  </table>
+  <h3>Think</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/grill</code></td><td>6 forcing questions before writing code — challenges assumptions, surfaces the 10-star version</td></tr>
+      <tr><td><code>/ui-hunt</code></td><td>Finds best-in-class references, extracts design intelligence, produces Reference Brief</td></tr>
+      <tr><td><code>/design-shotgun</code></td><td>4 working HTML/CSS design directions — real prototypes, not mockups</td></tr>
+      <tr><td><code>/architect</code></td><td>System design for multi-component projects — diagrams, contracts, tech choices</td></tr>
+      <tr><td><code>/createplan</code></td><td>Markdown implementation plan with verifiable steps</td></tr>
+    </tbody>
+  </table>
+  <h3>Build</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/execute</code></td><td>Implements the plan step by step, updates tracker after each</td></tr>
+      <tr><td><code>/backend-builder</code></td><td>APIs, servers, databases — Node, FastAPI, Supabase patterns</td></tr>
+      <tr><td><code>/browser-extension-builder</code></td><td>Chrome + Firefox extensions (Manifest V3) end to end</td></tr>
+      <tr><td><code>/mobile-app-builder</code></td><td>PWA or Expo/React Native — picks the right path</td></tr>
+      <tr><td><code>/static-site-replicator</code></td><td>Replicates a reference site with new brand assets — full lifecycle</td></tr>
+    </tbody>
+  </table>
+  <h3>Review</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/autoresearch-review</code></td><td>Pre-merge bug analysis — enumerates failure modes, scores bug likelihood</td></tr>
+      <tr><td><code>/debug</code></td><td>Symptom-to-root-cause elimination method</td></tr>
+      <tr><td><code>/test-gen</code></td><td>Targeted tests for untested paths — no ceremonial coverage</td></tr>
+      <tr><td><code>/simplify</code></td><td>Reviews changed code for reuse + quality; fixes what it finds</td></tr>
+      <tr><td><code>/peer-review</code></td><td>Triages external reviewer feedback — Accept / Fix / Context / Reject</td></tr>
+      <tr><td><code>/security-review</code></td><td>Security audit of pending changes on current branch</td></tr>
+    </tbody>
+  </table>
+  <h3>Ship</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/ship</code></td><td>Sync with main, run tests, push, open structured PR</td></tr>
+      <tr><td><code>/deploy</code></td><td>Vercel / Railway / Fly / Docker — env vars, CI/CD, health checks, rollback</td></tr>
+      <tr><td><code>/monitor</code></td><td>Error tracking, analytics, uptime, logging for deployed projects</td></tr>
+      <tr><td><code>/documentation</code></td><td>Updates <code>CHANGELOG.md</code> + inline docs after a change</td></tr>
+    </tbody>
+  </table>
+  <h3>Memory + Session</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/learn</code></td><td>Writes conventions, decisions, pitfalls, preferences to <code>.claude/brain.md</code></td></tr>
+      <tr><td><code>/remember</code></td><td>Injects brain into <code>CLAUDE.md</code> so it auto-loads every session</td></tr>
+      <tr><td><code>/context-save</code></td><td>WIP-commits + writes <code>.claude/context.md</code> — resume next session cleanly</td></tr>
+      <tr><td><code>/context-restore</code></td><td>Reconstructs where the last session ended</td></tr>
+      <tr><td><code>/retro</code></td><td>Weekly retrospective — what shipped, what broke, what slowed you down</td></tr>
+      <tr><td><code>/reflect</code></td><td>Self-improvement — traces a failure to the responsible skill, proposes a fix</td></tr>
+    </tbody>
+  </table>
+  <h3>Other</h3>
+  <table>
+    <tbody>
+      <tr><td><code>/create-issue</code></td><td>Structured bug/feature doc without losing current flow</td></tr>
+      <tr><td><code>/learning</code></td><td>Teaching mode — explains a concept in 3 progressive levels</td></tr>
+      <tr><td><code>/claude-api</code></td><td>Build, debug, tune Claude API / Anthropic SDK apps (with prompt caching)</td></tr>
+      <tr><td><code>/advisor</code></td><td>Opus advisor + Haiku/Sonnet executor pattern for Claude API apps</td></tr>
+      <tr><td><code>/last30days</code></td><td>Deep research across 10+ sources for the last 30 days</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="agents">
+  <p class="section-tag">07 · Reference</p>
+  <h2>Agents — when to delegate</h2>
+  <p>Agents are specialized subprocesses. They start with no context, so brief them fully. Use them to (a) parallelize independent work, (b) protect your main context from massive outputs, or (c) hand a single external service to a scoped writer (provisioners).</p>
+
+  <h3>Read-only review agents</h3>
+  <table>
+    <thead><tr><th>Agent</th><th>When to use</th></tr></thead>
+    <tbody>
+      <tr><td><code>explore</code></td><td>Before planning any feature or fix — fast codebase exploration, returns structured report</td></tr>
+      <tr><td><code>review</code></td><td>Focused code review on any significant change — reads only, returns severity-tagged findings</td></tr>
+      <tr><td><code>site-eval</code></td><td><strong>Mandatory</strong> before declaring any static site done</td></tr>
+      <tr><td><code>pre-merge</code></td><td>Before every PR merge — combines review + autoresearch into one pass</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Research + HITL pre-qualifier agents <strong>NEW</strong></h3>
+  <table>
+    <thead><tr><th>Agent</th><th>When to use</th></tr></thead>
+    <tbody>
+      <tr><td><code>github-scout</code></td><td>Before <code>/architect</code> on any new build — searches GitHub for ≥5 prior-art repos, reads READMEs + manifests, returns a Reference Brief covering the convergent stack, patterns to lift, footguns observed, and a first-principles override.</td></tr>
+      <tr><td><code>prd-reviewer</code></td><td>Pre-qualifies a PRD bundle before owner sees it (Gate 1). Checks every feature → screen mapping, every screen → all states, no AI slop in mocks, no hand-wave language. Returns BLOCK / PASS WITH FIXES / PASS.</td></tr>
+      <tr><td><code>mvp-reviewer</code></td><td>Pre-qualifies a local MVP build before owner sees it (Gate 2). Spins up the local server, walks every screen + golden path, checks responsive, validates all states render, runs accessibility checks. Returns BLOCK / PASS WITH FIXES / PASS.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Provisioner agents (autopilot infra) <strong>NEW</strong></h3>
+  <p>Each provisioner reads from the vault, talks to one external service via REST or GraphQL (no CLI dependencies), and returns JSON metadata that gets appended to <code>state.json</code>. All idempotent — re-running on existing infra is safe.</p>
+  <table>
+    <thead><tr><th>Agent</th><th>Service</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>gh-provisioner</code></td><td>GitHub</td><td>Creates repo, sets branch protection on main, pushes secrets from vault, scaffolds <code>.gitignore</code> + a placeholder CI workflow</td></tr>
+      <tr><td><code>supabase-provisioner</code></td><td>Supabase</td><td>Creates project via Management API, scaffolds versioned migrations + RLS, captures keys to vault under per-project namespace, pushes to GitHub repo secrets</td></tr>
+      <tr><td><code>vercel-provisioner</code></td><td>Vercel</td><td>Creates project linked to GitHub, pushes env vars from vault, configures custom domain, triggers preview deploys on every PR</td></tr>
+      <tr><td><code>railway-provisioner</code></td><td>Railway</td><td>Creates project + service, attaches Postgres if needed, configures healthcheck on <code>/health</code>, sets restart policy ON_FAILURE/3</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Why the four provisioners are separate, not one big "deploy everything" agent:</strong> each platform's API has different auth, error codes, and idempotency semantics. Keeping them isolated means a Supabase outage doesn't block Vercel, and you can swap Railway for Fly.io later without touching the others.
+  </div>
+</section>
+
+<section id="memory">
+  <p class="section-tag">08 · System</p>
+  <h2>The three-layer memory system</h2>
+  <p>Claude sessions are stateless by default. tanker solves this with three files that auto-load at the start of every session:</p>
+  <table>
+    <thead><tr><th>File</th><th>What it holds</th><th>Updated by</th></tr></thead>
+    <tbody>
+      <tr><td><code>.claude/brain.md</code></td><td>Conventions, decisions, pitfalls, preferences — cumulative, stable</td><td><code>/learn</code> after any meaningful session</td></tr>
+      <tr><td><code>.claude/context.md</code></td><td>Where the last session left off; next steps; open threads</td><td><code>/context-save</code> before ending a session</td></tr>
+      <tr><td><code>.claude/git-state.md</code></td><td>Current branch, last commit, working tree status</td><td>Stop hook — every turn, automatically</td></tr>
+      <tr><td><code>CLAUDE.md</code></td><td>Mirror of the above so it loads in every session via Claude Code's auto-load</td><td><code>/remember</code> after <code>/learn</code></td></tr>
+      <tr><td><code>outputs/&lt;slug&gt;/state.json</code></td><td>Live state of an autopilot run — phase, infra IDs, PR statuses, errors. Enables resume.</td><td><code>/cto</code> appends every phase</td></tr>
+      <tr><td><code>~/.claude/vault/credentials.json</code></td><td>API tokens for autopilot infra. Outside the project, 0600 perms.</td><td><code>/vault-add</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>Rule of thumb:</strong> run <code>/learn</code> at the end of any session where something important was decided. Run <code>/remember</code> right after. Run <code>/context-save</code> if work is unfinished. That's the entire maintenance loop.
+  </div>
+</section>
+
+<section id="chaining">
+  <p class="section-tag">09 · System</p>
+  <h2>Skill chaining — how skills hand off</h2>
+  <p>Every skill ends with a line pointing at the next skill. Two styles of handoff:</p>
+  <div class="two-col">
+    <div>
+      <h4>Automatic</h4>
+      <p><code>/ui-hunt</code> → <code>/design-shotgun</code> (when you say yes)</p>
+      <p><code>/execute</code> step N → step N+1</p>
+      <p><code>/autoresearch-review</code> PASS → prompts <code>/ship</code></p>
+    </div>
+    <div>
+      <h4>Prompt-and-confirm</h4>
+      <p><code>/grill</code> → "Ready for <code>/architect</code>?"</p>
+      <p><code>/design-shotgun</code> direction chosen → "Proceed to <code>/execute</code>?"</p>
+      <p><code>/ship</code> opens PR → "Run <code>pre-merge</code> agent?"</p>
+    </div>
+  </div>
+  <p>Handoffs are <em>explicit prompts</em>, not footnotes. You should never have to guess what comes next.</p>
+</section>
+
+<section id="rules">
+  <p class="section-tag">10 · System</p>
+  <h2>Always-on rules</h2>
+  <p>Three rule files live in <code>.claude/rules/</code> and apply to every file touched in a tanker project:</p>
+  <table>
+    <thead><tr><th>Rule</th><th>Enforces</th></tr></thead>
+    <tbody>
+      <tr><td><code>builder-ethos.md</code></td><td>Boil the Lake · Search Before Building · Fix-First Review · No AI Slop · Safety Before Speed · Skill Chaining</td></tr>
+      <tr><td><code>code-standards.md</code></td><td>No <code>any</code> types · comments explain why not what · match existing patterns before introducing new ones</td></tr>
+      <tr><td><code>static-site-standards.md</code></td><td>Single-file first · CSS custom properties · IntersectionObserver for scroll · mandatory <code>site-eval</code> before delivery</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="anti">
+  <p class="section-tag">11 · Guardrails</p>
+  <h2>Anti-patterns — the AI slop fingerprints</h2>
+  <p>These are banned in tanker. The <code>builder-ethos</code> rule enforces them, <code>site-eval</code> fails on them:</p>
+  <ul class="clean">
+    <li>Purple / violet / indigo gradients as the primary palette (<code>#6366f1</code>–<code>#8b5cf6</code> range)</li>
+    <li>3-column feature grid with icon-in-circle + bold title + 2-line description</li>
+    <li><code>text-align: center</code> on more than 60% of text containers</li>
+    <li>Uniform bubbly border-radius (&gt;80% of elements using 16px+)</li>
+    <li>Generic hero copy: "Welcome to X", "Unlock the power of…", "Streamline your workflow"</li>
+    <li>More than 3 font families on a page</li>
+    <li>Heading levels that skip (<code>h1</code> → <code>h3</code>)</li>
+    <li>Missing hover / focus states on interactive elements</li>
+    <li><code>outline: none</code> without a visible focus replacement</li>
+  </ul>
+</section>
+
+<section id="quick">
+  <p class="section-tag">12 · Quick reference</p>
+  <h2>Quick reference card</h2>
+  <h3>Starting a new project — autopilot</h3>
+  <pre><code># one-time setup (only the first time you run /cto on this machine)
+/vault-add github       # ghp_... + your username
+/vault-add vercel       # token from vercel.com/account/tokens
+/vault-add supabase     # access_token + org_id from supabase.com/dashboard/account/tokens
+/vault-add anthropic    # sk-ant-... for the Haiku/Sonnet/Opus model chain
+/vault-add railway      # only if you need a long-running backend
+
+# then run autopilot
+/cto "AI business analyst for Indian D2C sellers — connects 6 SaaS tools, chat with your data"
+# returns: prod URL, repo URL, dashboards, state.json path</code></pre>
+
+  <h3>Starting a new project — manual</h3>
+  <pre><code>cd ~/projects
+mkdir my-new-thing && cd my-new-thing
+cp -r ~/projects/tanker/.claude .claude
+git init
+
+# then in Claude Code:
+/grill
+# → /ui-hunt (if UI)
+# → /architect
+# → /createplan
+# → /execute</code></pre>
+  <h3>Daily loop</h3>
+  <ol>
+    <li>Session starts → brain + context auto-load (one-line briefing appears)</li>
+    <li>Pick up where context.md says → or start a new feature with <code>/createplan</code></li>
+    <li>Work through <code>/execute</code> steps</li>
+    <li>Before ending: <code>/learn</code> → <code>/remember</code> → <code>/context-save</code> if unfinished</li>
+  </ol>
+  <h3>Shipping</h3>
+  <pre><code>/autoresearch-review     # bug hunt before merge
+/ship                    # open the PR
+pre-merge (agent)        # final gate
+# merge → /deploy → /monitor</code></pre>
+  <h3>When something goes wrong</h3>
+  <pre><code>/debug                   # symptom to root cause
+/reflect                 # trace the failure back to the responsible skill/rule
+/test-gen                # regression test so it never returns</code></pre>
+</section>
+
+<footer class="bottom">
+  <p>tanker · built by Tanish Girotra · <a href="https://github.com/tanishg98/tanker">github.com/tanishg98/tanker</a></p>
+  <p>This guidebook is meant to be lightly modified. Edit freely.</p>
+</footer>
+
+</div>
+</body>
+</html>
