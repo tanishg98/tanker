@@ -53,7 +53,7 @@ WHY="$2"   # from --why
 TAGS="$3"  # from --tags, comma-separated
 
 # 1. Append to YAML manifest (idempotent — skip if URL already present)
-python3 - <<PY
+~/.claude/brain-index/venv/bin/python - <<PY
 import yaml, sys
 from pathlib import Path
 p = Path.home() / ".claude" / "references" / "repos.yaml"
@@ -66,7 +66,7 @@ data["references"].append({
     "why": "$WHY",
     "tags": [t.strip() for t in "$TAGS".split(",") if t.strip()],
 })
-p.write_text(yaml.safe_dump(data, sort_keys=False, default_flow_style=False))
+p.write_text(yaml.safe_dump(data, sort_keys=False, default_flow_style=False, allow_unicode=True))
 print(f"[refs] added {repr('$URL')}")
 PY
 
@@ -82,7 +82,7 @@ Report: repo slug, files ingested, chunks added.
 ## Phase 3 — List
 
 ```bash
-python3 - <<PY
+~/.claude/brain-index/venv/bin/python - <<PY
 import yaml
 from pathlib import Path
 data = yaml.safe_load((Path.home()/".claude"/"references"/"repos.yaml").read_text()) or {}
@@ -104,14 +104,14 @@ PY
 URL="$1"
 
 # 1. Remove from YAML
-python3 - <<PY
+~/.claude/brain-index/venv/bin/python - <<PY
 import yaml
 from pathlib import Path
 p = Path.home() / ".claude" / "references" / "repos.yaml"
 data = yaml.safe_load(p.read_text()) or {"references": []}
 before = len(data["references"])
 data["references"] = [r for r in data["references"] if r.get("url") != "$URL"]
-p.write_text(yaml.safe_dump(data, sort_keys=False, default_flow_style=False))
+p.write_text(yaml.safe_dump(data, sort_keys=False, default_flow_style=False, allow_unicode=True))
 print(f"[refs] removed {before - len(data['references'])} entry from manifest")
 PY
 
