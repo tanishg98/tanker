@@ -60,6 +60,8 @@ nav:
       - State.json: architecture/state.md
       - Human gates: architecture/gates.md
       - Provisioner agents: architecture/provisioners.md
+      - Config (tanker.yaml): architecture/config.md
+      - Hosted Tanker (planned): architecture/hosted.md
   - Skills:
       - Index: skills/index.md
       - /cto: skills/cto.md

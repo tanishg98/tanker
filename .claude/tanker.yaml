@@ -1,0 +1,116 @@
+# Tanker model + provider configuration
+#
+# Borrowed from MetaGPT's config2.yaml pattern, adapted for Claude Code.
+#
+# This file is read by /cto and individual skills to pick the right model
+# tier per task. Cheap tasks go to Haiku, hard tasks go to Opus, default to
+# Sonnet when in doubt. The result is faster + cheaper runs without sacrificing
+# the quality on the bottleneck steps.
+#
+# Override per project by copying to .claude/tanker.local.yaml in the consuming
+# repo. Tanker reads tanker.local.yaml first, then falls back to this file.
+
+version: "1.0"
+
+# Default model when no per-skill override applies. Used by all subagents
+# unless they specify their own.
+default_model: claude-sonnet-4-6
+
+# Per-skill model preferences. Skills SHOULD respect these via
+# the `model:` frontmatter field — but Claude Code itself controls model
+# selection at the session level. Treat this as documentation + a hint
+# Tanker can pass to subagents at dispatch time.
+models:
+
+  # Hard reasoning, exhaustive output, decision-shaping artifacts → Opus
+  /grill: claude-opus-4-7
+  /benchmark: claude-opus-4-7
+  /prd: claude-opus-4-7
+  /architect: claude-opus-4-7
+  /createplan: claude-opus-4-7
+  /advisor: claude-opus-4-7
+
+  # Workhorse: build, ship, deploy, review → Sonnet (default)
+  /execute: claude-sonnet-4-6
+  /backend-builder: claude-sonnet-4-6
+  /browser-extension-builder: claude-sonnet-4-6
+  /mobile-app-builder: claude-sonnet-4-6
+  /ship: claude-sonnet-4-6
+  /deploy: claude-sonnet-4-6
+  /static-site-replicator: claude-sonnet-4-6
+  /design-shotgun: claude-sonnet-4-6
+  /ui-hunt: claude-sonnet-4-6
+  /security-review: claude-sonnet-4-6
+  /autoresearch-review: claude-sonnet-4-6
+  /analyst: claude-sonnet-4-6
+  /debug: claude-sonnet-4-6
+  /test-gen: claude-sonnet-4-6
+
+  # Cheap, repetitive, low-stakes → Haiku
+  /reflect: claude-haiku-4-5-20251001
+  /context-save: claude-haiku-4-5-20251001
+  /context-restore: claude-haiku-4-5-20251001
+  /create-issue: claude-haiku-4-5-20251001
+  /documentation: claude-haiku-4-5-20251001
+  /learning: claude-haiku-4-5-20251001
+  /vault-add: claude-haiku-4-5-20251001
+  /cto-add-ref: claude-haiku-4-5-20251001
+  /retro: claude-haiku-4-5-20251001
+  /learn: claude-haiku-4-5-20251001
+
+# Per-agent model preferences. Provisioner agents are mostly API-shape work
+# and respond to clear prompts — Sonnet handles them well. Reviewers run on
+# Opus because false PASSes are expensive.
+agents:
+  prd-reviewer: claude-opus-4-7
+  mvp-reviewer: claude-opus-4-7
+  pre-merge: claude-sonnet-4-6
+  review: claude-sonnet-4-6
+  site-eval: claude-sonnet-4-6
+  explore: claude-sonnet-4-6
+  github-scout: claude-sonnet-4-6
+  gh-provisioner: claude-sonnet-4-6
+  supabase-provisioner: claude-sonnet-4-6
+  vercel-provisioner: claude-sonnet-4-6
+  railway-provisioner: claude-sonnet-4-6
+
+# Provider configuration. Today Tanker is Claude Code-native so this is a
+# stub — Claude Code itself manages the API key + provider. Future multi-LLM
+# support reads from this section.
+providers:
+  anthropic:
+    enabled: true
+    # api_key is read from ~/.claude/vault/credentials.json .anthropic.api_key
+    base_url: https://api.anthropic.com
+  openai:
+    enabled: false
+    # api_key is read from ~/.claude/vault/credentials.json .openai.api_key
+    base_url: https://api.openai.com/v1
+  azure:
+    enabled: false
+
+# /advisor cross-model peer review pairing. The "author" model writes; the
+# "reviewer" model reviews. Different families catch different blind spots.
+advisor:
+  pairs:
+    - { author: claude-opus-4-7, reviewer: claude-sonnet-4-6 }
+    - { author: claude-sonnet-4-6, reviewer: claude-opus-4-7 }
+  # Future: cross-provider pairs
+  # - { author: claude-opus-4-7, reviewer: gpt-4-turbo }
+
+# Cost ceilings by run type. Used by /cto --max-cost-usd default and by
+# individual skills that allow caps.
+cost_ceilings:
+  cto_default_usd: 10.00
+  cto_dev_usd: 3.00      # /cto --dev (smaller cap for spike runs)
+  cto_prod_usd: 25.00    # /cto --prod (larger cap for real builds)
+  analyst_default_usd: 2.00
+  prd_default_usd: 1.50
+
+# Retry behaviour. Bounded loops everywhere — see steal #4.
+retries:
+  pre_merge_max: 2
+  build_subagent_max: 2
+  prd_reviewer_max: 2
+  mvp_reviewer_max: 2
+  provisioner_max: 1   # provisioners are idempotent; one retry is enough

@@ -29,6 +29,50 @@ DEFAULT_COLLECTION = "brain"
 SKIP_DIRS = {".obsidian", ".git", ".trash", "node_modules", "__pycache__"}
 MD_EXTS = {".md", ".markdown"}
 
+# Surface tags inferred from top-level vault folder. Used by /cto agents to
+# scope retrieval (frontend agent only retrieves frontend-tagged context, etc).
+SURFACE_TAG_MAP = {
+    "Soul": "identity",
+    "People": "people",
+    "Decisions": "decisions",
+    "Meetings": "meetings",
+    "Daily": "daily",
+    "Projects": "projects",
+    "Playbook": "playbook",
+    "wiki": "wiki",
+    "raw": "raw",
+}
+
+# Domain tags inferred from heading + body keywords. Cheap, keyword-based —
+# good enough for the ChromaDB metadata filter contract.
+DOMAIN_KEYWORDS = {
+    "frontend": [r"\bnext\.?js\b", r"\bvue\b", r"\breact\b", r"\bcss\b", r"\btailwind\b", r"\bui\b", r"\bcomponent\b"],
+    "backend": [r"\bfastapi\b", r"\bexpress\b", r"\bnode\.?js\b", r"\bapi\b", r"\bauth\b", r"\bjwt\b", r"\bmiddleware\b"],
+    "data":     [r"\bpostgres\b", r"\bsupabase\b", r"\bsql\b", r"\bschema\b", r"\bmigration\b", r"\brls\b", r"\betl\b", r"\bduckdb\b"],
+    "infra":    [r"\bvercel\b", r"\brailway\b", r"\bdocker\b", r"\bkubernetes\b", r"\bci/?cd\b", r"\bgithub actions\b"],
+    "product":  [r"\bprd\b", r"\bpersona\b", r"\broadmap\b", r"\bgtm\b", r"\bicp\b", r"\bd2c\b", r"\bsmb\b"],
+    "content":  [r"\bcopy\b", r"\bseo\b", r"\bblog\b", r"\bnewsletter\b", r"\blanding\b"],
+}
+
+
+def infer_surface_tag(rel_path: str) -> str | None:
+    top = rel_path.split("/", 1)[0]
+    return SURFACE_TAG_MAP.get(top)
+
+
+def infer_domain_tags(heading: str, chunk: str) -> str:
+    """Return a comma-separated string of domain tags. ChromaDB metadata values
+    must be primitives — using a delimited string keeps it queryable via
+    `$contains`."""
+    text = f"{heading}\n{chunk}".lower()
+    found = []
+    for tag, patterns in DOMAIN_KEYWORDS.items():
+        for pat in patterns:
+            if re.search(pat, text):
+                found.append(tag)
+                break
+    return ",".join(sorted(set(found)))
+
 
 def chunk_markdown(text: str, max_chars: int = 1200) -> list[tuple[str, str]]:
     """Split markdown by H2 headings; fall back to fixed windows for sections >max_chars.
@@ -101,6 +145,8 @@ def index_vault(vault: Path, collection_name: str, reset: bool = False) -> None:
                 continue  # unchanged content — skip re-embedding
 
             n_chunks_new += 1
+            surface = infer_surface_tag(rel_path) or ""
+            domains = infer_domain_tags(heading, chunk)
             coll.upsert(
                 ids=[doc_id],
                 documents=[chunk],
@@ -109,6 +155,8 @@ def index_vault(vault: Path, collection_name: str, reset: bool = False) -> None:
                         "path": rel_path,
                         "heading": heading,
                         "vault": str(vault),
+                        "surface": surface,
+                        "domains": domains,
                     }
                 ],
             )

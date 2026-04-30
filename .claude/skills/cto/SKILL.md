@@ -3,7 +3,7 @@ name: cto
 description: Top-level autopilot orchestrator with human-in-the-loop gates. Turns a one-line product brief into a live, deployed product. Loads the brain + memory, runs github-scout for prior art, runs grill→/prd→architect→advisor decision gates, provisions infra in parallel (gh + supabase + vercel + railway via /vault-add credentials), dispatches engineering subagents in parallel for frontend/backend/data, gates merges with autoresearch-review + pre-merge agent, deploys preview→prod with auto-rollback, wires monitoring. Two HARD STOPS for human review: (1) post-PRD after prd-reviewer agent PASSes, (2) post-local-build after mvp-reviewer agent PASSes. State checkpointed every phase to outputs/<slug>/state.json so any session can resume. Default mode is autopilot with HITL gates — pass `--full-auto` to skip the human gates (not recommended for first run on a new product).
 triggers:
   - /cto
-args: "[product brief in plain English] [optional: --full-auto (skip human gates) | --resume <slug> | --status <slug> | --audit <slug> | --max-cost-usd <N> (default 10)]"
+args: "[product brief in plain English] [optional: --full-auto (skip human gates) | --resume <slug> | --status <slug> | --audit <slug> | --rerun-from <msg_id> (selective replay, see rerun-protocol.md) [--only <subscriber>] [--skip <subscriber>] [--exclusive] | --max-cost-usd <N> (default 10)]"
 ---
 
 # /cto — Autopilot Orchestrator
@@ -22,6 +22,8 @@ The user has chosen autopilot. Don't ask for permission at every phase. Run the 
 If a rail trips (test fails, healthcheck fails, vault missing a key) — STOP. Report. Don't paper over.
 
 **Provenance:** every artifact you (or a dispatched skill/agent) produce gets a Message envelope appended to `outputs/<slug>/messages.jsonl`. Schema and examples in `message-schema.md` (sibling file). Every phase below ends with an `append_message` step — do not skip it. This is what makes the run replayable, auditable, and cost-trackable.
+
+**Subscriptions:** after every phase Message write, do a subscription pass — load every `.claude/agents/*.md` frontmatter, match any agent whose `subscribes_to` clause fits the new Message, and dispatch (idempotent). Spec at `subscriptions.md`. This is how cross-cutting agents (slack-notifier, cost-monitor, compliance-redactor) plug in without editing `/cto`. Existing DAG-dispatched agents are unaffected.
 
 **Budget:** the orchestrator respects `--max-cost-usd` (default `$10`). Track running cost in `state.json.budget.spent_usd` (sum of `cost_usd` across all messages.jsonl entries). Before dispatching a phase, check `spent_usd / max_cost_usd`:
 - < 0.7: proceed
@@ -203,12 +205,14 @@ Mark `phases_done: [..., "provision"]`.
 
 Dispatch in parallel using Agent tool:
 
-| Subagent | Skill / persona | Reads | Produces |
-|---|---|---|---|
-| frontend-engineer | `/static-site-replicator` or `/design-shotgun` then code | architecture.md, plan.md, reference-brief.md | `apps/web/` or `frontend/` files |
-| backend-engineer | `/backend-builder` | architecture.md, plan.md | `apps/api/` or `backend/` files, healthcheck route |
-| data-engineer | `/architect` data model section | architecture.md | `supabase/migrations/<ts>_*.sql` |
-| content-engineer | (manual prompt) | brief, brand from context.md | landing copy, OG image meta, README |
+| Subagent | Skill / persona | Reads | Memory slice (per-agent retrieval) | Produces |
+|---|---|---|---|---|
+| frontend-engineer | `/static-site-replicator` or `/design-shotgun` then code | architecture.md, plan.md, reference-brief.md | `python query.py "<keywords>" --domain frontend --top 6` | `apps/web/` or `frontend/` files |
+| backend-engineer | `/backend-builder` | architecture.md, plan.md | `python query.py "<keywords>" --domain backend --top 6` | `apps/api/` or `backend/` files, healthcheck route |
+| data-engineer | `/architect` data model section | architecture.md | `python query.py "<keywords>" --domain data --top 6` | `supabase/migrations/<ts>_*.sql` |
+| content-engineer | (manual prompt) | brief, brand from context.md | `python query.py "<keywords>" --domain content --top 6` | landing copy, OG image meta, README |
+
+**Per-agent memory slice (steal #7 from MetaGPT):** each engineering subagent runs `query.py` with `--domain <its-domain>` so it retrieves only chunks tagged with that domain. Backend agent doesn't see frontend CSS noise; frontend agent doesn't see SQL migration noise. Results are appended to the subagent's prompt as `outputs/<slug>/build/<role>/context.md` before dispatch.
 
 Each subagent works on its own branch (`feature/<area>`), commits, and opens a PR. They do not merge.
 
@@ -382,6 +386,10 @@ elif ratio >= 0.7 and not warned_already:
     print(f"⚠️  Budget {ratio*100:.0f}% used (${spent:.2f} / ${max_usd:.2f}). Continuing.")
     warned_already = True
 ```
+
+## Selective replay subcommand
+
+`/cto --rerun-from <msg_id>` — replay from any Message envelope forward. Use cases: PR reviewer over-flagged, build phase produced bad code, subscription agent failed. Snapshots state.json + messages.jsonl before mutating. Full protocol in `rerun-protocol.md`.
 
 ## Resume protocol
 
