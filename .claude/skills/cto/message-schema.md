@@ -4,7 +4,7 @@ Every artifact produced during a `/cto` run is wrapped in a typed Message envelo
 
 ## Why
 
-MetaGPT's `Message` (with `cause_by`, `sent_from`, `send_to`) is the right pattern: every artifact carries provenance. Tanker had free-form `state.json` writes — provenance was lost, and review agents had to re-parse markdown to recover what skill produced what.
+Without provenance metadata, multi-agent runs are unreplayable: review agents have to re-parse markdown to recover which skill produced which artifact, cost tracking is impossible, and selective re-runs require manual surgery. The `cause_by` / `sent_from` / `send_to` envelope fixes all three at once — every artifact carries who produced it, who it was for, and what it replied to.
 
 ## The envelope
 

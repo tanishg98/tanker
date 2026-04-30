@@ -1,6 +1,6 @@
 ---
 name: analyst
-description: Data analyst skill. Takes a CSV / parquet / JSON / SQL endpoint + a question, produces a written answer with charts, backed by reproducible Python code that is actually executed (not just generated). Modeled on MetaGPT's DataInterpreter — ReAct loop over Plan → Execute → Reflect → Decide. Use for ad-hoc data exploration, KPI investigation, attribution analysis, return-rate cohort breakdowns, or any "look at this dataset and tell me what's interesting" question.
+description: Data analyst skill. Takes a CSV / parquet / JSON / SQL endpoint + a question, produces a written answer with charts, backed by reproducible Python code that is actually executed (not just generated). ReAct loop over Plan → Execute → Reflect → Decide. Use for ad-hoc data exploration, KPI investigation, attribution analysis, return-rate cohort breakdowns, or any "look at this dataset and tell me what's interesting" question.
 triggers:
   - /analyst
 args: "[data source — file path / URL / Postgres conn string] [question — plain English]"
@@ -28,7 +28,7 @@ If a chart appears in the report, the code that produced it must be in the noteb
 - **Honest uncertainty.** If the data doesn't answer the question, say so. "Inconclusive — sample size 14 over 90 days" is a valid finding. Fabricated certainty is not.
 
 **Reference:**
-- MetaGPT's `metagpt/roles/di/data_interpreter.py` is the pattern: Plan → Code → Execute → Reflect → Decide loop.
+- ReAct loop: Plan → Code → Execute → Reflect → Decide. Standard pattern for tool-using agents that need to iterate against real-world feedback.
 - For Indian D2C / Shiprocket data: prefer pandas + duckdb for in-memory analysis; only reach for Postgres connection if dataset > 5GB.
 
 **Output Format:**

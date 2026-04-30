@@ -2,8 +2,6 @@
 
 Tanker reads `.claude/tanker.yaml` for per-skill / per-agent model preferences, retry caps, and cost ceilings. Override per-project with `.claude/tanker.local.yaml`.
 
-> Pattern borrowed from MetaGPT's `config2.yaml`. Adapted for Claude Code.
-
 ## Why config-driven model selection
 
 Without per-skill model preferences, every skill defaults to the same model. That's wasteful — `/reflect` doesn't need Opus, but `/prd` does. With `tanker.yaml`:

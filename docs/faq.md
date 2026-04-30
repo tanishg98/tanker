@@ -14,7 +14,7 @@ Yes — Tanker uses Claude (Opus + Sonnet) via Claude Code. A typical `/cto` run
 
 ## Can I use a different LLM?
 
-Today, no — Tanker is Claude Code-native. Multi-provider support is on the roadmap (steal #10 from MetaGPT).
+Today, no — Tanker is Claude Code-native. Multi-provider support is on the roadmap.
 
 ## Is the data shared with anyone?
 

@@ -212,7 +212,7 @@ Dispatch in parallel using Agent tool:
 | data-engineer | `/architect` data model section | architecture.md | `python query.py "<keywords>" --domain data --top 6` | `supabase/migrations/<ts>_*.sql` |
 | content-engineer | (manual prompt) | brief, brand from context.md | `python query.py "<keywords>" --domain content --top 6` | landing copy, OG image meta, README |
 
-**Per-agent memory slice (steal #7 from MetaGPT):** each engineering subagent runs `query.py` with `--domain <its-domain>` so it retrieves only chunks tagged with that domain. Backend agent doesn't see frontend CSS noise; frontend agent doesn't see SQL migration noise. Results are appended to the subagent's prompt as `outputs/<slug>/build/<role>/context.md` before dispatch.
+**Per-agent memory slice:** each engineering subagent runs `query.py` with `--domain <its-domain>` so it retrieves only chunks tagged with that domain. Backend agent doesn't see frontend CSS noise; frontend agent doesn't see SQL migration noise. Results are appended to the subagent's prompt as `outputs/<slug>/build/<role>/context.md` before dispatch.
 
 Each subagent works on its own branch (`feature/<area>`), commits, and opens a PR. They do not merge.
 
@@ -250,7 +250,7 @@ if attempt == max_attempts:
     Append final Message with status="block" and meta.attempts=max_attempts.
 ```
 
-The cap of 3 attempts (1 original + 2 retries) matches MetaGPT's `WriteCodeReview` loop. Beyond 2 retries, the failure is structural — surface to human, don't burn tokens.
+The cap of 3 attempts (1 original + 2 retries) is deliberate. Beyond 2 retries, the failure is structural — surface to human, don't burn tokens chasing it.
 
 Mark `phases_done: [..., "build", "merged"]`.
 

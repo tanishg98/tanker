@@ -4,8 +4,6 @@
 
 Every artifact produced during a `/cto` run is wrapped in a typed Message envelope and appended to `outputs/<slug>/messages.jsonl` (one JSON object per line).
 
-This is what MetaGPT does well. Tanker steals it.
-
 ## Why
 
 Without provenance:

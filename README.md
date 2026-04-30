@@ -162,7 +162,7 @@ Loaded every session.
 
 Honest, non-defensive comparisons in the docs:
 
-- [**Tanker vs MetaGPT**](./docs/comparisons/metagpt.md) — most-asked. Tanker borrows MetaGPT's typed Message schema, SOP triplet pattern, bounded retry loop. Disagrees with their full-autonomy default.
+- [**Tanker vs MetaGPT**](./docs/comparisons/metagpt.md) — most-asked. End-to-end deployed-product pipeline vs code-generation framework, with two human gates instead of full autonomy.
 - [Tanker vs AutoGen](./docs/comparisons/autogen.md)
 - [Tanker vs CrewAI](./docs/comparisons/crewai.md)
 - [Tanker vs Aider](./docs/comparisons/aider.md) — complementary, not competing
@@ -206,8 +206,6 @@ Run `mkdocs build --strict` before opening a docs PR.
 MIT · Built by [**Tanish Girotra**](https://github.com/tanishg98) — head of product, Shiprocket India.
 
 If you ship something with Tanker, [open an issue](https://github.com/tanishg98/tanker/issues/new) and link it. The `examples/` directory is community-grown.
-
-Honest credit: Tanker borrows the typed Message envelope, SOP triplet prompt pattern, bounded retry loop, and DataInterpreter pattern from [MetaGPT](https://github.com/FoundationAgents/MetaGPT). Their work made Tanker's architecture possible. The honest comparison is in [docs/comparisons/metagpt.md](./docs/comparisons/metagpt.md).
 
 <div align="center">
 

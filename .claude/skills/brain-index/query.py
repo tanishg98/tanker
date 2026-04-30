@@ -7,7 +7,7 @@ Usage:
   python query.py "ecommerce dashboard" --collection brain --top 5 --json
   python query.py "auth patterns"      --collection refs  --top 5
 
-Per-agent memory slice (steal #7 from MetaGPT):
+Per-agent memory slice (used by /cto build subagents):
   python query.py "request handler error patterns" --domain backend --top 6
   python query.py "design references"              --domain frontend --top 6
   python query.py "schema migration patterns"      --domain data --top 6

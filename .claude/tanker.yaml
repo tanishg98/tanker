@@ -1,8 +1,6 @@
 # Tanker model + provider configuration
 #
-# Borrowed from MetaGPT's config2.yaml pattern, adapted for Claude Code.
-#
-# This file is read by /cto and individual skills to pick the right model
+# Read by /cto and individual skills to pick the right model
 # tier per task. Cheap tasks go to Haiku, hard tasks go to Opus, default to
 # Sonnet when in doubt. The result is faster + cheaper runs without sacrificing
 # the quality on the bottleneck steps.

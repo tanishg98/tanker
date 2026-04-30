@@ -6,7 +6,7 @@
 
 ## Why this example
 
-Shows Tanker's `/analyst` skill — Python sandbox + ReAct loop modeled on MetaGPT's DataInterpreter, but executed (not just generated).
+Shows Tanker's `/analyst` skill — Python sandbox with a ReAct loop. Generated code is actually executed, not just written.
 
 ## Expected runtime
 

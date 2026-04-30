@@ -1,6 +1,6 @@
 # /cto pub-sub Environment
 
-> Steal #8 from MetaGPT. Inverts the `/cto` orchestrator from a hardcoded DAG into a subscription registry. Agents subscribe to artifact types they care about; the orchestrator emits Messages and routes them to subscribers.
+> Inverts the `/cto` orchestrator from a hardcoded DAG into a subscription registry. Agents subscribe to artifact types they care about; the orchestrator emits Messages and routes them to subscribers.
 
 ## Why
 

@@ -123,25 +123,30 @@ If MetaGPT / AutoGen / CrewAI / gstack maintainers engage:
 
 ---
 
-Status of pre-launch deliverables (what I shipped on the feature branch `feat/metagpt-steals-and-launch-prep`):
+Status of pre-launch deliverables (already shipped on `main`):
 
 - ✅ Memory schema fixed (`project_tanker.md` + `project_obsidian_brain.md`, old confused file deleted)
-- ✅ Steal #1: typed Message envelope schema (`.claude/skills/cto/message-schema.md` + `.claude/schemas/message.schema.json`)
-- ✅ Steal #2: SOP triplet refactor on `/prd`, `/architect`, `/createplan`, `pre-merge`
-- ✅ Steal #3: `--max-cost-usd` budget cap (in `/cto` SKILL.md)
-- ✅ Steal #4: bounded retry loop (max 2 retries) in build phase
-- ✅ Steal #5: JSON sidecar schemas for top 5 outputs (`.claude/schemas/{prd,architecture,plan,review,message}.schema.json`)
-- ✅ Steal #6: `/analyst` skill (DataInterpreter equivalent) at `.claude/skills/analyst/SKILL.md`
+- ✅ Typed Message envelope schema (`.claude/skills/cto/message-schema.md` + `.claude/schemas/message.schema.json`)
+- ✅ SOP triplet (Constraints / Reference / Output Format) on `/prd`, `/architect`, `/createplan`, `pre-merge`
+- ✅ `--max-cost-usd` budget cap in `/cto` SKILL.md
+- ✅ Bounded retry loop (max 2 retries) in build phase
+- ✅ JSON sidecar schemas for top 5 outputs (`.claude/schemas/{prd,architecture,plan,review,message}.schema.json`)
+- ✅ `/analyst` skill (Python sandbox + ReAct loop) at `.claude/skills/analyst/SKILL.md`
+- ✅ Per-agent memory slice (ChromaDB metadata filters: `--domain frontend|backend|data|infra|...`)
+- ✅ Pub-sub Environment for /cto (subscription registry in agent frontmatter)
+- ✅ `/cto --rerun-from <msg_id>` selective replay
+- ✅ Multi-model `tanker.yaml` (Opus for hard reasoning, Sonnet for build, Haiku for cheap loops)
 - ✅ One-line installer: `install.sh`
 - ✅ Examples directory: `examples/{saas-mvp,static-site,browser-extension,bug-fix,data-analysis}/{brief,transcript}.md`
 - ✅ mkdocs site: `mkdocs.yml` + `docs/` tree + GitHub Pages workflow
 - ✅ Comparison pages: `docs/comparisons/{metagpt,autogen,crewai,aider,gstack}.md`
-- ✅ README rewrite
-- ✅ Launch copy package: `.launch/{show-hn,twitter-thread,reddit-*,producthunt,linkedin,devto-blog-post,email-template}.md`
+- ✅ README rewrite + real Persona Studio hero GIF
+- ✅ Launch copy package: `.launch/{show-hn,twitter-thread,reddit-*,producthunt,linkedin,devto-blog-post,email-template,morning-schedule}.md`
 
-**Not yet implemented (deferred to a second PR after launch):**
+**On the v1.1 roadmap (after launch):**
 
-- Steal #7: per-agent memory slice in brain-index (needs ChromaDB metadata filter wiring)
-- Steal #8: pub-sub Environment (architectural change to `/cto` orchestrator)
+- Hosted `tanker.dev` with one-click `/cto`
+- Multi-LLM provider support (currently Claude Code-native)
+- `/cto --rerun-from <msg_id>` runtime wiring (spec exists; orchestrator pass not yet implemented)
 
-These are valid v1.1 work. The launch doesn't depend on them.
+The launch doesn't depend on these.
