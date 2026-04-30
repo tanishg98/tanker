@@ -16,6 +16,72 @@ This is not a vibe doc. It is a contract.
 
 ---
 
+## SOP — Constraints / Reference / Output Format
+
+**Constraints (non-negotiable):**
+- Every section in the skeleton (1–13 below) must be present, in order. No skipping, no merging.
+- Every screen named in §8 must have at least 3 enumerated states (default, loading, empty, error, success — pick all that apply, at minimum 3).
+- Every feature in §7 must reference the exact screen + element it surfaces in (e.g. "FT-014 Connect Shopify → Screen S-03 Onboarding step 2 → CTA button `Connect Shopify`").
+- "TBD", "[…]", "etc.", and unresolved questions are blocking — write the actual content or remove the section. The reviewer will reject TBDs.
+- Visual direction must be specific: hex codes for palette, named font families, named UI references with URLs.
+- Out-of-scope (§5) must be a real list — minimum 5 items. "We'll add more later" is not a PRD.
+
+**Reference example (lift the structure verbatim):**
+- See MetaGPT's `metagpt/actions/write_prd_an.py` for the few-shot pattern: every section has a worked example before the LLM is asked to fill it in.
+- Tanker's own `outputs/d2c-os-v1/prd/Rocketizer-PRD-v1.md` is the closest gold-standard PRD in this repo. When in doubt, mirror its specificity.
+
+**Output Format (this skill produces three files, all required):**
+1. `outputs/<slug>/prd/prd.md` — the narrative document (sections 1–13 below).
+2. `outputs/<slug>/prd/index.html` — lightweight HTML wireframes, one per screen + landing page. Single file, inline CSS, no JS frameworks. Light theme (per owner preference). See `static-site-standards.md` for craft rules.
+3. `outputs/<slug>/prd/prd.json` — the same content as prd.md but in the schema below. Machine-readable. The prd-reviewer agent reads this; humans read the markdown.
+
+```json
+{
+  "$schema": ".claude/schemas/prd.schema.json",
+  "version": "1.0",
+  "product": { "name": "...", "slug": "...", "one_liner": "..." },
+  "problem": "...",
+  "target_user": { "persona": "...", "pain": "...", "why_now": "..." },
+  "success_metric": { "metric": "...", "target": "...", "measured_when": "..." },
+  "out_of_scope": [{ "item": "...", "why_not_yet": "..." }, ...],
+  "visual_direction": {
+    "palette": [{ "name": "primary", "hex": "#..." }, ...],
+    "typography": { "heading": "...", "body": "...", "mono": "..." },
+    "references": [{ "name": "Stripe Dashboard", "url": "...", "what_we_lift": "..." }]
+  },
+  "features": [
+    { "id": "FT-001", "name": "...", "description": "...", "surfaces_on": ["S-03"], "priority": "P0|P1|P2" }
+  ],
+  "screens": [
+    {
+      "id": "S-01",
+      "name": "Landing",
+      "purpose": "...",
+      "states": [
+        { "name": "default", "description": "..." },
+        { "name": "loading", "description": "..." },
+        { "name": "error", "description": "..." }
+      ],
+      "elements": ["..."],
+      "wireframe_file": "outputs/<slug>/prd/screens/S-01-landing.html"
+    }
+  ],
+  "flows": [
+    { "id": "FL-01", "name": "First-time signup", "steps": ["S-01 → S-02 → S-03"], "happy_path": true }
+  ],
+  "edge_cases": [
+    { "scenario": "...", "expected_behavior": "..." }
+  ],
+  "open_questions": []
+}
+```
+
+**`open_questions` must be empty.** If you have questions, surface them to the user before writing the PRD — don't ship a PRD with open questions and expect the reviewer to catch them. Pre-answer using the brief, /grill, /benchmark, and context.
+
+---
+
+---
+
 ## Inputs you must read first
 
 In order:

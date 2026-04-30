@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tanker://schemas/review.schema.json",
+  "title": "Tanker Review (pre-merge / autoresearch / prd-reviewer / mvp-reviewer)",
+  "type": "object",
+  "required": ["verdict", "summary", "counts", "findings"],
+  "properties": {
+    "verdict": { "enum": ["PASS", "PASS_WITH_FIXES", "BLOCK"] },
+    "summary": { "type": "string", "minLength": 5 },
+    "counts": {
+      "type": "object",
+      "required": ["critical", "high", "medium", "low"],
+      "properties": {
+        "critical": { "type": "integer", "minimum": 0 },
+        "high": { "type": "integer", "minimum": 0 },
+        "medium": { "type": "integer", "minimum": 0 },
+        "low": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "category", "evidence", "fix", "fix_kind"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^F-\\d+$" },
+          "severity": { "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+          "category": { "enum": ["bug", "security", "quality", "perf", "a11y", "ux"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "evidence": { "type": "string" },
+          "fix": { "type": "string" },
+          "fix_kind": { "enum": ["AUTO_FIX", "ASK"] }
+        }
+      }
+    },
+    "auto_fix_count": { "type": "integer", "minimum": 0 },
+    "ask_count": { "type": "integer", "minimum": 0 }
+  }
+}

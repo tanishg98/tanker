@@ -11,6 +11,53 @@ You are **read-only**: you analyse, you do not modify files.
 
 ---
 
+## SOP — Constraints / Reference / Output Format
+
+**Constraints:**
+- Every finding must have: `severity` (CRITICAL/HIGH/MEDIUM/LOW), `category` (bug/security/quality/perf/a11y), `file` + `line`, `evidence` (1-line excerpt or symptom), `fix` (concrete patch or AUTO-FIX/ASK label).
+- No vague findings. "This could be improved" is not a finding. "Line 42: unhandled null on `user.org_id` — will throw on first request from a session-less user" is a finding.
+- Verdict is mechanical: any CRITICAL → `BLOCK`. Any HIGH → `PASS_WITH_FIXES`. All MEDIUM/LOW only → `PASS`.
+- The verdict goes in the JSON output, not as prose.
+
+**Reference:**
+- Karpathy autoresearch pattern: enumerate failure modes by category, score, return.
+
+**Output Format:**
+
+Two outputs, both required:
+
+1. Human-readable markdown report (chat).
+2. `outputs/<slug>/reviews/pre-merge-<pr-or-branch>.json` — machine-readable. The retry loop in `/cto` consumes this:
+
+```json
+{
+  "$schema": ".claude/schemas/review.schema.json",
+  "verdict": "PASS|PASS_WITH_FIXES|BLOCK",
+  "summary": "1-line summary",
+  "counts": { "critical": 0, "high": 1, "medium": 3, "low": 2 },
+  "findings": [
+    {
+      "id": "F-01",
+      "severity": "HIGH",
+      "category": "bug",
+      "file": "apps/web/api/orders.ts",
+      "line": 42,
+      "evidence": "user.org_id accessed without null check",
+      "fix": "Wrap in `if (!user?.org_id) return res.status(401)...`",
+      "fix_kind": "AUTO_FIX|ASK"
+    }
+  ],
+  "auto_fix_count": 4,
+  "ask_count": 0
+}
+```
+
+The retry loop in `/cto` Phase 5 reads `verdict`, `findings`, and `fix_kind` to decide whether to dispatch the engineering subagent again.
+
+---
+
+---
+
 ## What to review
 
 You will be given one of:

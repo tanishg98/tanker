@@ -14,6 +14,74 @@ No code. No implementation details unless they affect the architecture.
 
 ---
 
+## SOP — Constraints / Reference / Output Format
+
+**Constraints:**
+- Every component you draw must have: a name, a one-line responsibility, an owner team or surface (frontend/backend/data/infra), and a single-pass-or-fail verify step.
+- Every API contract must specify: method, path, request schema, response schema, error codes, auth, idempotency key (if write).
+- Every data model entity must specify: table name, columns with types, primary key, foreign keys, indexes, RLS policy (if Supabase), retention policy.
+- Every tech decision must include: the chosen option, the rejected alternative, the one-line reason. "We picked Postgres" is not a decision; "We picked Postgres over DynamoDB because we need joins for the merchant-graph query in §4.2" is.
+- No "we'll figure it out later." If you cannot decide, flag it explicitly in the `open_decisions` section and STOP for human input.
+
+**Reference:**
+- Use C4 model levels (Context → Container → Component) but skip the diagrams unless asked. Focus on text + clean tables.
+- Mirror `outputs/d2c-os-v1/architecture.md` if present — that's the gold standard for this repo.
+
+**Output Format:**
+1. `outputs/<slug>/architecture.md` — narrative.
+2. `outputs/<slug>/architecture.json` — machine-readable. Schema:
+
+```json
+{
+  "$schema": ".claude/schemas/architecture.schema.json",
+  "system": { "name": "...", "one_liner": "..." },
+  "components": [
+    {
+      "id": "C-01",
+      "name": "Web app",
+      "kind": "frontend|backend|data|infra|external",
+      "responsibility": "...",
+      "owner_surface": "frontend",
+      "depends_on": ["C-02"],
+      "verify": "user can sign in via /login"
+    }
+  ],
+  "api_contracts": [
+    {
+      "id": "API-01",
+      "method": "POST",
+      "path": "/v1/orders",
+      "auth": "session",
+      "request_schema": "...",
+      "response_schema": "...",
+      "errors": [{ "code": 422, "when": "..." }],
+      "idempotency_key": "X-Idempotency-Key header required"
+    }
+  ],
+  "data_model": [
+    {
+      "entity": "merchants",
+      "columns": [{ "name": "id", "type": "uuid", "pk": true }, ...],
+      "indexes": [{ "name": "...", "cols": ["..."], "unique": false }],
+      "rls": "merchant_id = current_setting('rls.merchant_id')::uuid"
+    }
+  ],
+  "tech_decisions": [
+    { "id": "TD-01", "decision": "Next.js 16 App Router", "rejected": ["Remix", "SvelteKit"], "why": "..." }
+  ],
+  "risks": [
+    { "id": "R-01", "risk": "...", "mitigation": "...", "severity": "P0|P1|P2" }
+  ],
+  "open_decisions": []
+}
+```
+
+**`open_decisions` must be empty.** If you have unresolved decisions, STOP and surface to user before producing the artifact.
+
+---
+
+---
+
 ## When to Run This
 
 Run `/architect` before `/createplan` when any of these are true:

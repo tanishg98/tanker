@@ -9,6 +9,57 @@ The plan is a shared artefact — it's how we track what's being built, in what 
 
 ---
 
+## SOP — Constraints / Reference / Output Format
+
+**Constraints:**
+- Every step must have: `id`, `title`, `verify`, `est_minutes`, `depends_on` (list of step ids), `risk` (P0/P1/P2). No step without a verify check.
+- A step is "done" only when its verify passes. "I think it works" is not done.
+- Risk-first ordering: P0-risk steps run before P1, P1 before P2 — even if it means doing the hard thing first. Discovering a problem in step 1 is cheaper than step 8.
+- A spike step (unresolved decision) must come before any step it could change.
+- No step longer than 60 minutes of work. Break it down further.
+
+**Reference:**
+- Mirror MetaGPT's `WriteTasks` output shape (linear list of typed tasks with verify + dependencies).
+- The closest in-repo gold standard: `outputs/d2c-os-v1/plan.md`.
+
+**Output Format:**
+1. `outputs/<slug>/plan.md` — narrative for humans.
+2. `outputs/<slug>/plan.json` — machine-readable. Schema:
+
+```json
+{
+  "$schema": ".claude/schemas/plan.schema.json",
+  "version": "1.0",
+  "feature": "...",
+  "total_est_minutes": 240,
+  "steps": [
+    {
+      "id": "P-01",
+      "title": "Add migration for orders.shipping_method",
+      "subtasks": ["..."],
+      "verify": "psql -c '\\d orders' shows shipping_method column",
+      "est_minutes": 15,
+      "depends_on": [],
+      "risk": "P0",
+      "files_touched": ["supabase/migrations/<ts>_orders_shipping_method.sql"]
+    }
+  ],
+  "decisions": [
+    { "id": "D-01", "decision": "...", "alternatives_rejected": [], "why": "..." }
+  ],
+  "risks": [
+    { "id": "R-01", "risk": "...", "mitigation": "...", "step_ids": ["P-01"] }
+  ],
+  "open_questions": []
+}
+```
+
+**`open_questions` must be empty.** Resolve before producing the plan.
+
+---
+
+---
+
 ## Step 0 — Dependency & Risk Analysis (do this before writing the plan)
 
 Before ordering any steps, answer three questions explicitly:

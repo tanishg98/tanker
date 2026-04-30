@@ -1,0 +1,99 @@
+site_name: Tanker
+site_description: A Claude Code framework that ships deployed products from a one-line brief.
+site_url: https://tanker.dev
+repo_url: https://github.com/tanishg98/tanker
+repo_name: tanishg98/tanker
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Install: getting-started/install.md
+      - First /cto run: getting-started/first-cto.md
+      - Vault & credentials: getting-started/vault.md
+      - Brain index: getting-started/brain-index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Message schema: architecture/messages.md
+      - State.json: architecture/state.md
+      - Human gates: architecture/gates.md
+      - Provisioner agents: architecture/provisioners.md
+      - Config (tanker.yaml): architecture/config.md
+      - Hosted Tanker (planned): architecture/hosted.md
+  - Skills:
+      - Index: skills/index.md
+      - /cto: skills/cto.md
+      - /grill: skills/grill.md
+      - /benchmark: skills/benchmark.md
+      - /prd: skills/prd.md
+      - /architect: skills/architect.md
+      - /createplan: skills/createplan.md
+      - /execute: skills/execute.md
+      - /analyst: skills/analyst.md
+      - /ship: skills/ship.md
+      - /deploy: skills/deploy.md
+      - /monitor: skills/monitor.md
+      - /retro: skills/retro.md
+      - /learn: skills/learn.md
+  - Agents:
+      - Index: agents/index.md
+      - explore: agents/explore.md
+      - pre-merge: agents/pre-merge.md
+      - prd-reviewer: agents/prd-reviewer.md
+      - mvp-reviewer: agents/mvp-reviewer.md
+      - github-scout: agents/github-scout.md
+      - site-eval: agents/site-eval.md
+  - Rules:
+      - builder-ethos: rules/builder-ethos.md
+      - code-standards: rules/code-standards.md
+      - static-site-standards: rules/static-site-standards.md
+  - Comparisons:
+      - Tanker vs MetaGPT: comparisons/metagpt.md
+      - Tanker vs AutoGen: comparisons/autogen.md
+      - Tanker vs CrewAI: comparisons/crewai.md
+      - Tanker vs Aider: comparisons/aider.md
+      - Tanker vs gstack: comparisons/gstack.md
+  - Examples: https://github.com/tanishg98/tanker/tree/main/examples
+  - FAQ: faq.md

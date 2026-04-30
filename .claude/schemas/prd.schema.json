@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tanker://schemas/prd.schema.json",
+  "title": "Tanker PRD",
+  "type": "object",
+  "required": ["version", "product", "problem", "target_user", "success_metric", "out_of_scope", "visual_direction", "features", "screens", "flows", "edge_cases", "open_questions"],
+  "properties": {
+    "version": { "type": "string", "const": "1.0" },
+    "product": {
+      "type": "object",
+      "required": ["name", "slug", "one_liner"],
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+        "one_liner": { "type": "string", "minLength": 10 }
+      }
+    },
+    "problem": { "type": "string", "minLength": 50 },
+    "target_user": {
+      "type": "object",
+      "required": ["persona", "pain", "why_now"],
+      "properties": {
+        "persona": { "type": "string" },
+        "pain": { "type": "string" },
+        "why_now": { "type": "string" }
+      }
+    },
+    "success_metric": {
+      "type": "object",
+      "required": ["metric", "target", "measured_when"],
+      "properties": {
+        "metric": { "type": "string" },
+        "target": { "type": "string" },
+        "measured_when": { "type": "string" }
+      }
+    },
+    "out_of_scope": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["item", "why_not_yet"],
+        "properties": {
+          "item": { "type": "string" },
+          "why_not_yet": { "type": "string" }
+        }
+      }
+    },
+    "visual_direction": {
+      "type": "object",
+      "required": ["palette", "typography", "references"],
+      "properties": {
+        "palette": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["name", "hex"],
+            "properties": {
+              "name": { "type": "string" },
+              "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+            }
+          }
+        },
+        "typography": {
+          "type": "object",
+          "required": ["heading", "body"],
+          "properties": {
+            "heading": { "type": "string" },
+            "body": { "type": "string" },
+            "mono": { "type": "string" }
+          }
+        },
+        "references": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "url", "what_we_lift"],
+            "properties": {
+              "name": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
+              "what_we_lift": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "surfaces_on", "priority"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^FT-\\d{3}$" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "surfaces_on": { "type": "array", "items": { "type": "string", "pattern": "^S-\\d{2}$" }, "minItems": 1 },
+          "priority": { "enum": ["P0", "P1", "P2"] }
+        }
+      }
+    },
+    "screens": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "purpose", "states", "elements", "wireframe_file"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S-\\d{2}$" },
+          "name": { "type": "string" },
+          "purpose": { "type": "string" },
+          "states": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["name", "description"],
+              "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" }
+              }
+            }
+          },
+          "elements": { "type": "array", "items": { "type": "string" } },
+          "wireframe_file": { "type": "string" }
+        }
+      }
+    },
+    "flows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "steps", "happy_path"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^FL-\\d{2}$" },
+          "name": { "type": "string" },
+          "steps": { "type": "array", "items": { "type": "string" } },
+          "happy_path": { "type": "boolean" }
+        }
+      }
+    },
+    "edge_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scenario", "expected_behavior"],
+        "properties": {
+          "scenario": { "type": "string" },
+          "expected_behavior": { "type": "string" }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "Must be empty. Resolve all questions before producing the PRD."
+    }
+  }
+}

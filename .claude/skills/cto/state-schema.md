@@ -12,6 +12,16 @@ Every `/cto` run writes to `outputs/<slug>/state.json`. This is the canonical sc
   "mode": "autopilot",
   "phase": "build",
   "phases_done": ["intake", "context", "reference", "grill", "architect", "plan", "advisor", "provision"],
+  "budget": {
+    "max_cost_usd": 10.0,
+    "spent_usd": 1.84,
+    "warned_at_70pct": false,
+    "halted_budget": false
+  },
+  "human_gates": {
+    "prd": { "verdict": "approved", "feedback_iterations": 0, "approved_at": "2026-04-27T14:42:00Z" },
+    "mvp": null
+  },
   "decisions": {
     "stack": {
       "frontend": "nextjs-14",
@@ -79,10 +89,19 @@ Every `/cto` run writes to `outputs/<slug>/state.json`. This is the canonical sc
 
 ## Fields
 
-- `phase` — current phase, one of: `intake | context | reference | grill | benchmark | prd | prd_review_agent | prd_human_review | architect | plan | advisor | provision | build | mvp_review_agent | mvp_human_review | deploy | monitor | report | done`
+- `phase` — current phase, one of: `intake | context | reference | grill | benchmark | prd | prd_review_agent | prd_human_review | architect | plan | advisor | provision | build | mvp_review_agent | mvp_human_review | deploy | monitor | report | done | halted_budget`
 - `phases_done` — append-only list. Resume protocol skips any phase in this list.
+- `budget` — `{ "max_cost_usd": float, "spent_usd": float, "warned_at_70pct": bool, "halted_budget": bool }` — orchestrator-enforced cost ceiling. See `message-schema.md` for how `spent_usd` is computed (sum of `cost_usd` across messages.jsonl).
 - `human_gates` — `{ "prd": { "verdict": "approved" | "abort" | null, "feedback_iterations": <n>, "approved_at": "..." }, "mvp": { ... } }` — tracks the two HITL gates so resume knows whether the user already approved.
 - `errors` — append-only. On failure, push `{ phase, agent, error, ts }`. Don't silently swallow.
+
+## Companion files
+
+Every `outputs/<slug>/` also contains:
+
+- `messages.jsonl` — one Message envelope per line. See `message-schema.md` for the full schema. This is the audit trail; `state.json` is the high-level status.
+- `prd/` — PRD bundle (md + html mocks + json schema sidecar)
+- `architecture.md`, `plan.md`, `advisor.md`, `reference-brief.md`, `context.md` — phase artifacts referenced by Messages.
 
 ## Resume
 

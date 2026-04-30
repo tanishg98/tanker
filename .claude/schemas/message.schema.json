@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tanker://schemas/message.schema.json",
+  "title": "Tanker Message envelope (one per line in messages.jsonl)",
+  "type": "object",
+  "required": ["id", "ts", "phase", "cause_by", "sent_from", "send_to", "artifact_type", "status"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^msg_[0-9A-Za-z]+$" },
+    "ts": { "type": "string", "format": "date-time" },
+    "phase": {
+      "enum": [
+        "intake", "context", "reference", "grill", "benchmark", "prd", "prd_review_agent", "prd_human_review",
+        "architect", "plan", "advisor", "provision", "build", "merged", "mvp_review_agent", "mvp_human_review",
+        "deploy", "monitor", "report", "done", "halted_budget"
+      ]
+    },
+    "cause_by": { "type": "string", "description": "Slash command or skill that produced this. e.g. /prd, /architect, cto:phase4" },
+    "sent_from": { "type": "string", "pattern": "^(skill|agent|cto|human):" },
+    "send_to": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^(skill|agent|cto|human):" }
+    },
+    "artifact_type": {
+      "enum": [
+        "brief", "context_brain", "context_refs", "reference_brief",
+        "grill", "benchmark", "prd_bundle", "prd_review",
+        "architecture", "plan", "advisor_review",
+        "provision_report", "build_pr", "pre_merge_review", "autoresearch_review",
+        "mvp_review", "deploy_report", "monitor_report", "final_report"
+      ]
+    },
+    "artifact_path": { "type": ["string", "null"] },
+    "artifact_companion_paths": { "type": "array", "items": { "type": "string" } },
+    "in_reply_to": { "type": ["string", "null"], "pattern": "^msg_[0-9A-Za-z]+$" },
+    "tokens_in": { "type": "integer", "minimum": 0 },
+    "tokens_out": { "type": "integer", "minimum": 0 },
+    "cost_usd": { "type": "number", "minimum": 0 },
+    "status": { "enum": ["ok", "block", "pass_with_fixes", "error"] },
+    "error": { "type": "string" },
+    "meta": { "type": "object" }
+  }
+}

@@ -4,7 +4,7 @@ description: Indexes the local Obsidian vault at ~/Desktop/Obsidian/Brain/ into 
 triggers:
   - /brain-index
   - /brain-query
-args: "[index | query \"<text>\"] [--top N] [--reset] [--vault PATH] [--collection brain|refs]"
+args: "[index | query \"<text>\"] [--top N] [--reset] [--vault PATH] [--collection brain|refs] [--domain frontend|backend|data|infra|product|content] [--surface identity|people|decisions|meetings|daily|projects|playbook|wiki|raw]"
 ---
 
 # brain-index
@@ -28,6 +28,17 @@ This creates the venv on first run (~200MB download) and is a no-op afterward.
 ## Phase 1 — Pick the operation
 
 Two operations: **index** (refresh the vector DB from vault) and **query** (semantic retrieval).
+
+### Per-agent memory slice
+
+Each chunk written by `index.py` carries two metadata fields the query side filters on:
+
+- **`surface`** — top-level vault folder. Maps to `identity / people / decisions / meetings / daily / projects / playbook / wiki / raw`. Use `--surface decisions` to retrieve only from the Decisions/ folder.
+- **`domains`** — comma-separated set inferred from heading + body keywords. Values: `frontend / backend / data / infra / product / content`. Use `--domain backend` to retrieve only chunks that mention backend keywords.
+
+Filters stack via `$and`. Example: `--domain backend --surface wiki` returns wiki chunks tagged backend.
+
+This is what `/cto` Phase 5 uses to give each engineering subagent its own slice of memory — backend agent sees backend context, frontend agent sees frontend context. Avoids cross-domain noise.
 
 ### Index
 
