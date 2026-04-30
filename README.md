@@ -2,13 +2,14 @@
 
 # tanker
 
-**A Claude Code framework that ships deployed products from a one-line brief.**
+### A Claude Code framework that ships **deployed products** from a one-line brief.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docs](https://img.shields.io/badge/docs-tanker.dev-black)](https://tanker.dev)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/tanishg98/tanker?style=flat&color=cc785c)](https://github.com/tanishg98/tanker/stargazers)
 [![Built with Claude Code](https://img.shields.io/badge/built_with-Claude_Code-cc785c)](https://docs.claude.com/claude-code)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tanishg98/tanker/pulls)
 
-[Docs](https://tanker.dev) · [Examples](./examples/) · [Compare](./docs/comparisons/metagpt.md) · [Discord](https://discord.gg/tanker)
+[**Quick start →**](#install) · [**Examples →**](./examples/) · [**vs MetaGPT →**](./docs/comparisons/metagpt.md)
 
 </div>
 
@@ -18,15 +19,23 @@
 
 ![Persona Studio — built with Tanker](./assets/demo.gif)
 
-**Real product built with Tanker:** [persona-studio-lime.vercel.app](https://persona-studio-lime.vercel.app) — India-first AI influencer studio. One `/cto` brief → deployed product.
+### Built with Tanker · live in production
+
+**[persona-studio-lime.vercel.app](https://persona-studio-lime.vercel.app)** — India-first AI influencer studio. One `/cto` brief. One weekend. Deployed.
 
 </div>
 
+---
+
+## Try it
+
 ```bash
-/cto "AI business analyst for Indian D2C sellers — connects 6 SaaS tools, chat with your data"
+bash <(curl -fsSL https://raw.githubusercontent.com/tanishg98/tanker/main/install.sh)
+/vault-add github vercel supabase anthropic
+/cto "AI business analyst for Indian D2C sellers — chat with your data"
 ```
 
-…~30 minutes of attention later, you have:
+~30 minutes of attention later, you have:
 
 - ✅ Live production URL
 - ✅ Repo with branch protection, CI, versioned migrations
@@ -34,136 +43,134 @@
 - ✅ Sentry + analytics + uptime wired
 - ✅ Full audit trail in `outputs/<slug>/messages.jsonl`
 
----
-
-## Install
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/tanishg98/tanker/main/install.sh)
-```
-
-That's it. The installer copies `.claude/` into the current directory, sets up the vault, and (optionally) builds the brain-index over your Obsidian vault.
-
-Then add credentials and run:
-
-```bash
-/vault-add github vercel supabase anthropic
-/cto "todo app with email auth and a kanban board"
-```
-
 → [Detailed install guide](./docs/getting-started/install.md)
 
 ---
 
-## What's different
+## What makes Tanker different
 
-- **Two human gates pre-qualified by review agents.** Most autopilots either go fully autonomous (and ship slop) or stop everywhere (and waste your time). Tanker stops twice — at PRD, at MVP — but only after a review agent has pre-qualified the work. You see only what's worth seeing.
-- **Real infrastructure provisioning.** GitHub repo, Supabase project, Vercel project, Railway service — created via official APIs from a vault at `~/.claude/vault/credentials.json` (0600).
-- **Resumable across sessions.** State checkpointed every phase to `state.json`. `messages.jsonl` is the typed audit trail. `/cto --resume <slug>` picks up exactly where you left off.
-- **Local semantic retrieval.** Tanker indexes your Obsidian vault + curated GitHub references into local ChromaDB. `/cto` Phase 1 retrieves from your accumulated knowledge — not generic GitHub search.
-- **Opinionated quality rails.** Builder-ethos rules are always on: Boil the Lake, Search Before Building, No AI Slop (with an explicit ban list), Safety Before Speed, Skill Chaining.
-- **Cost ceiling.** `--max-cost-usd` (default $10). Tanker tracks spend in `messages.jsonl`, warns at 70%, halts at 100%.
+> Most autopilots either **go fully autonomous** (and ship slop) or **stop everywhere** (and waste your time).
+> Tanker stops twice — at PRD, at MVP — but only after a review agent has pre-qualified the work.
+> You see only what's worth seeing.
+
+| | |
+|---|---|
+| 🎯 **Two human gates pre-qualified by review agents** | Best of both autopilot worlds. ~30 min of owner attention per `/cto` run. |
+| 🏗️ **Real infrastructure provisioning** | GitHub repo + Supabase project + Vercel project + Railway service. Created via APIs from a 0600-perms vault. Most "AI build" tools end at a code repo. Tanker ends at a deployed URL. |
+| ⏯️ **Resumable across sessions** | State checkpointed every phase. `messages.jsonl` is the typed audit trail. `/cto --resume <slug>` picks up where you left off. |
+| 🧠 **Local semantic retrieval** | Tanker indexes your Obsidian vault + curated GitHub references into local ChromaDB. Phase 1 retrieves from your knowledge — not generic GitHub search. |
+| 🛡️ **Opinionated quality rails** | Always-on rules: Boil the Lake, Search Before Building, No AI Slop (with explicit ban list), Safety Before Speed, Skill Chaining. |
+| 💰 **Cost ceiling built in** | `--max-cost-usd` (default $10). Tracks spend per Message envelope. Warns at 70%, halts at 100%. No surprise bills. |
 
 → [Architecture overview](./docs/architecture/overview.md)
 
 ---
 
-## The pipeline
+## The `/cto` pipeline
 
 ```
 intake → context (parallel: brain, refs) → reference (github-scout)
-  → /grill → /benchmark? → /prd → prd-reviewer → 🛑 GATE 1 (human PRD review)
+  → /grill → /benchmark? → /prd → prd-reviewer → 🛑 GATE 1 (human review)
   → /architect → /createplan → /advisor (cross-model peer review)
-  → PROVISION (parallel: gh, supabase, vercel, railway)
-  → BUILD (parallel: frontend, backend, data, content engineers)
-  → /pre-merge + /autoresearch-review per PR (bounded retry loop, max 2)
-  → mvp-reviewer → 🛑 GATE 2 (human MVP review)
+  → PROVISION (parallel: gh + supabase + vercel + railway)
+  → BUILD (parallel: frontend + backend + data + content engineers)
+  → /pre-merge + /autoresearch-review per PR (bounded retry, max 2)
+  → mvp-reviewer → 🛑 GATE 2 (human review)
   → /deploy → /monitor → final report
 ```
-
-Two human gates. State checkpointed every phase. Idempotent provisioners. Healthcheck-gated rollback.
 
 → [How `/cto` works](./docs/getting-started/first-cto.md)
 
 ---
 
-## Skills
+## What's inside
 
-34 skills across product, design, planning, building, quality, and memory.
+<table>
+<tr>
+<td valign="top" width="33%">
 
-| Phase | Skill | What it does |
-|---|---|---|
-| Think | `/grill` | YC-style forcing questions before code |
-| Research | `/ui-hunt` | Find best-in-class UI references |
-| Compare | `/benchmark` | Feature matrix vs competitors |
-| Spec | `/prd` | Exhaustive PRD with HTML wireframes |
-| Design | `/architect` | System design — components, APIs, data, decisions |
-| Plan | `/createplan` | Risk-first plan with verify gates |
-| Build | `/execute` | Step-by-step implementation |
-| Analyze | `/analyst` | Python sandbox + ReAct loop on data |
-| Ship | `/ship` | Sync, test, push, structured PR |
-| Deploy | `/deploy` | Vercel / Railway / Fly / Docker |
-| Watch | `/monitor` | Sentry / Plausible / Better Stack |
-| Improve | `/retro` | Weekly retrospective writes back to brain |
+### **34 Skills**
+
+Slash commands that do the work.
+
+**Think** — `/grill` `/benchmark` `/prd`
+**Design** — `/architect` `/ui-hunt` `/design-shotgun`
+**Plan** — `/createplan` `/advisor`
+**Build** — `/execute` `/backend-builder` `/browser-extension-builder` `/mobile-app-builder`
+**Data** — `/analyst` (ReAct sandbox)
+**Ship** — `/ship` `/deploy` `/monitor`
+**Quality** — `/autoresearch-review` `/security-review` `/test-gen` `/debug`
+**Memory** — `/learn` `/retro` `/context-save` `/context-restore`
 
 → [Full skill index](./docs/skills/index.md)
 
----
+</td>
+<td valign="top" width="33%">
 
-## Agents
+### **9 Agents**
 
-9 agents — read-only review specialists, research agents, and scoped-write provisioners.
+Specialists in isolated context.
 
-| Agent | Purpose |
-|---|---|
-| `explore` | Map codebase before planning |
-| `pre-merge` | Combined quality + bug gate |
-| `prd-reviewer` | Pre-qualify PRD before human gate |
-| `mvp-reviewer` | Pre-qualify MVP before human gate |
-| `github-scout` | Tier 0 curated refs, Tier 1 wider search |
-| `site-eval` | 9-dimension static site audit |
-| `gh-provisioner` | Repo + branch protection + secrets |
-| `supabase-provisioner` | Project + RLS + Management API |
-| `vercel-provisioner` | Project + env vars + preview deploys |
-| `railway-provisioner` | Service + healthcheck + Postgres |
+**Review (read-only)**
+`explore` `pre-merge` `prd-reviewer` `mvp-reviewer` `site-eval` `review`
+
+**Research**
+`github-scout`
+
+**Provisioner (scoped write)**
+`gh-provisioner`
+`supabase-provisioner`
+`vercel-provisioner`
+`railway-provisioner`
 
 → [Agent details](./docs/agents/index.md)
 
----
+</td>
+<td valign="top" width="33%">
 
-## Always-on rules
+### **3 Always-on rules**
 
-- **`builder-ethos`** — six principles loaded every session.
-- **`code-standards`** — type discipline, comment-the-why, pattern consistency.
-- **`static-site-standards`** — single-file first, no frameworks, IntersectionObserver, eval gate.
+Loaded every session.
+
+**`builder-ethos`** — Six principles. Boil-the-Lake, Search-Before-Building, Fix-First-Review, No-AI-Slop, Safety-Before-Speed, Skill-Chaining.
+
+**`code-standards`** — Type discipline, comment-the-why, pattern consistency.
+
+**`static-site-standards`** — Single-file-first, no frameworks, IntersectionObserver animations, eval gate.
 
 → [Rules](./docs/rules/builder-ethos.md)
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## Examples
 
-Five worked examples:
-
-- [SaaS MVP](./examples/saas-mvp/) — `/cto` end-to-end
-- [Static site](./examples/static-site/) — `/static-site-replicator` + `/design-shotgun`
-- [Browser extension](./examples/browser-extension/) — Chrome MV3
-- [Bug fix](./examples/bug-fix/) — `/explore` → `/debug` → `/test-gen` → `/ship`
-- [Data analysis](./examples/data-analysis/) — `/analyst` ReAct loop
+| Example | What it shows |
+|---|---|
+| [**SaaS MVP**](./examples/saas-mvp/) — *Persona Studio* | `/cto` end-to-end: brief → deployed product with auth + DB + UI |
+| [Static site](./examples/static-site/) | `/static-site-replicator` + `/design-shotgun` flow |
+| [Browser extension](./examples/browser-extension/) | Chrome MV3 with content scripts + storage |
+| [Bug fix](./examples/bug-fix/) | `/explore` → `/debug` → `/test-gen` → `/ship` on existing repo |
+| [Data analysis](./examples/data-analysis/) | `/analyst` ReAct loop on a real dataset |
 
 ---
 
-## Compare
+## How it compares
 
-- [Tanker vs MetaGPT](./docs/comparisons/metagpt.md) — most-asked comparison
+Honest, non-defensive comparisons in the docs:
+
+- [**Tanker vs MetaGPT**](./docs/comparisons/metagpt.md) — most-asked. Tanker borrows MetaGPT's typed Message schema, SOP triplet pattern, bounded retry loop. Disagrees with their full-autonomy default.
 - [Tanker vs AutoGen](./docs/comparisons/autogen.md)
 - [Tanker vs CrewAI](./docs/comparisons/crewai.md)
-- [Tanker vs Aider](./docs/comparisons/aider.md)
-- [Tanker vs gstack](./docs/comparisons/gstack.md)
+- [Tanker vs Aider](./docs/comparisons/aider.md) — complementary, not competing
+- [Tanker vs gstack](./docs/comparisons/gstack.md) — same primitives, different opinions
 
 ---
 
-## Project structure
+## Repo structure
 
 ```
 .claude/
@@ -172,13 +179,12 @@ Five worked examples:
 ├── schemas/     — JSON schemas for validated artifacts
 └── skills/      — 34 slash commands
 
-docs/            — mkdocs site (deployed to tanker.dev)
-examples/        — five worked examples
+docs/            — mkdocs site
+examples/        — five worked examples (SaaS MVP is real, deployed)
 outputs/         — runs go here (one folder per slug)
 
 install.sh       — one-line installer
 mkdocs.yml       — docs config
-README.md        — this file
 ```
 
 ---
@@ -187,9 +193,9 @@ README.md        — this file
 
 PRs welcome. Bar:
 
-- New skills: SOP triplet (Constraints / Reference / Output Format), JSON sidecar schema, worked example.
-- New agents: structured JSON output validated against a schema in `.claude/schemas/`.
-- New rules: argued in PR description with concrete examples of the failure mode it prevents.
+- **New skills** — SOP triplet (Constraints / Reference / Output Format), JSON sidecar schema, worked example
+- **New agents** — structured JSON output validated against a schema in `.claude/schemas/`
+- **New rules** — argued in PR description with concrete examples of the failure mode it prevents
 
 Run `mkdocs build --strict` before opening a docs PR.
 
@@ -197,6 +203,12 @@ Run `mkdocs build --strict` before opening a docs PR.
 
 ## License
 
-MIT. Built by [Tanish Girotra](https://github.com/tanishg98).
+MIT · Built by [**Tanish Girotra**](https://github.com/tanishg98) — head of product, Shiprocket India.
 
-If you're shipping with Tanker, [post in the show-your-build channel](https://discord.gg/tanker) — it's the fastest way to feedback that improves the framework.
+If you ship something with Tanker, [open an issue](https://github.com/tanishg98/tanker/issues/new) and link it. The `examples/` directory is community-grown.
+
+<div align="center">
+
+⭐ **Star the repo** if Tanker shapes how you build with Claude.
+
+</div>
