@@ -1,5 +1,9 @@
 # What only you can do
 
+> **Status update (post-merge):** PR #3 is merged to `main`. Real Persona Studio screenshots are the README hero. Most of Phase 0 below is now ✅ done.
+>
+> **Tomorrow morning's plan** lives in [`.launch/morning-schedule.md`](./.launch/morning-schedule.md) — that's the active file. This checklist is the wider rollout reference.
+
 Everything in this checklist requires **your account access, your wallet, your face, your brand judgment.** I (Claude) have done everything else — code, schemas, docs, launch copy. This is your runway.
 
 The list is ordered. Don't skip steps; the launch fails on omissions, not bad copy.

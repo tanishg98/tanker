@@ -1,18 +1,21 @@
 # Launch package
 
-Copy-paste-ready launch artifacts. **Read [USER-CHECKLIST.md](../USER-CHECKLIST.md) for the order of operations and what only you can do.**
+Copy-paste-ready launch artifacts. **Tomorrow morning's plan lives in [`morning-schedule.md`](./morning-schedule.md)** — start there.
+
+For the wider rollout (Show HN, dev.to, awesome lists), see the table below + [USER-CHECKLIST.md](../USER-CHECKLIST.md).
 
 ## Files
 
-| File | Use |
-|---|---|
-| `show-hn.md` | Show HN submission — title, URL, comment |
-| `twitter-thread.md` | X/Twitter launch thread |
-| `reddit-localllama.md` | r/LocalLLaMA post |
-| `reddit-claudeai.md` | r/ClaudeAI post |
-| `reddit-chatgptcoding.md` | r/ChatGPTCoding post |
-| `producthunt.md` | Product Hunt copy |
-| `devto-blog-post.md` | dev.to / Hashnode launch blog |
+| File | Use | Status |
+|---|---|---|
+| `morning-schedule.md` | **Tomorrow morning's posts** — X + LinkedIn paste-ready, Reddit comment template | ✅ ready |
+| `show-hn.md` | Show HN submission — title, URL, maker comment | ✅ ready |
+| `twitter-thread.md` | Long-form X/Twitter launch thread (alternate to morning-schedule's single-post format) | ✅ ready |
+| `reddit-localllama.md` | r/LocalLLaMA post | optional |
+| `reddit-claudeai.md` | r/ClaudeAI post | optional |
+| `reddit-chatgptcoding.md` | r/ChatGPTCoding post | optional |
+| `producthunt.md` | Product Hunt copy | skipped per owner direction |
+| `devto-blog-post.md` | dev.to / Hashnode launch blog | ✅ ready |
 | `linkedin.md` | LinkedIn announcement |
 | `email-template.md` | Cold email to swyx, theo, nutlope, etc |
 

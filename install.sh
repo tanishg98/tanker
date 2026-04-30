@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 # Tanker — one-line installer.
-# Usage:   curl -fsSL https://raw.githubusercontent.com/tanishg98/tanker/main/install.sh | bash
-# Or:      bash install.sh
+#
+# Drops .claude/ into the current directory, creates ~/.claude/vault/ at 0700
+# with a 0600 credentials.json, and (optionally) sets up the brain-index venv
+# if an Obsidian vault is detected at ~/Desktop/Obsidian/Brain/.
+#
+# Usage:
+#   bash <(curl -fsSL https://raw.githubusercontent.com/tanishg98/tanker/main/install.sh)
+#   bash install.sh                    # in-repo invocation
+#   bash install.sh /path/to/project   # install into a specific directory
 set -euo pipefail
 
 REPO="https://github.com/tanishg98/tanker"

@@ -10,13 +10,15 @@ These are the canonical "show me what Tanker does" references. Read these before
 
 ## The five
 
-| Example | What it shows | Recommended for |
-|---|---|---|
-| [saas-mvp/](./saas-mvp/) | `/cto` end-to-end: brief → deployed product with auth + db + UI | First-time users |
-| [static-site/](./static-site/) | `/static-site-replicator` + `/design-shotgun` flow | Marketing pages, landing sites, portfolios |
-| [browser-extension/](./browser-extension/) | `/browser-extension-builder` for a Chrome MV3 extension | Productivity tools, page-modifiers |
-| [bug-fix/](./bug-fix/) | `/explore` → `/debug` → `/test-gen` → `/ship` flow on an existing repo | Daily engineering work |
-| [data-analysis/](./data-analysis/) | `/analyst` ReAct loop on a real dataset | Investigation, KPI work, attribution |
+| Example | What it shows | Live? | Recommended for |
+|---|---|---|---|
+| [saas-mvp/](./saas-mvp/) — **Persona Studio** | `/cto` end-to-end. Brief → deployed product with auth + DB + UI | [✅ live](https://persona-studio-lime.vercel.app) | First-time users |
+| [static-site/](./static-site/) | `/static-site-replicator` + `/design-shotgun` flow | scaffold | Marketing pages, landing sites, portfolios |
+| [browser-extension/](./browser-extension/) | `/browser-extension-builder` for a Chrome MV3 extension | scaffold | Productivity tools, page-modifiers |
+| [bug-fix/](./bug-fix/) | `/explore` → `/debug` → `/test-gen` → `/ship` flow on an existing repo | scaffold | Daily engineering work |
+| [data-analysis/](./data-analysis/) | `/analyst` ReAct loop on a real dataset | scaffold | Investigation, KPI work, attribution |
+
+**Persona Studio** is a real shipped product built with `/cto`: India-first AI influencer studio, currently live in private beta. The other four are scaffolds — fill them in by running the brief and pasting the captured run.
 
 ## How to read a transcript
 

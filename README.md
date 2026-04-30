@@ -207,6 +207,8 @@ MIT · Built by [**Tanish Girotra**](https://github.com/tanishg98) — head of p
 
 If you ship something with Tanker, [open an issue](https://github.com/tanishg98/tanker/issues/new) and link it. The `examples/` directory is community-grown.
 
+Honest credit: Tanker borrows the typed Message envelope, SOP triplet prompt pattern, bounded retry loop, and DataInterpreter pattern from [MetaGPT](https://github.com/FoundationAgents/MetaGPT). Their work made Tanker's architecture possible. The honest comparison is in [docs/comparisons/metagpt.md](./docs/comparisons/metagpt.md).
+
 <div align="center">
 
 ⭐ **Star the repo** if Tanker shapes how you build with Claude.
