@@ -223,7 +223,7 @@ Run `mkdocs build --strict` before opening a docs PR.
 
 ## License
 
-MIT · Built by [**Tanish Girotra**](https://github.com/tanishg98) — head of product, Shiprocket India.
+MIT · Built by [**Tanish Girotra**](https://github.com/tanishg98) — CEO's Office, Shiprocket · building everything with AI.
 
 If you ship something with Tanker, [open an issue](https://github.com/tanishg98/tanker/issues/new) and link it. The `examples/` directory is community-grown.
 

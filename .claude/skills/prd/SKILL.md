@@ -1,6 +1,6 @@
 ---
 name: prd
-description: Generates an exhaustive product-facing PRD with screens, features, flows, landing page mock, and visual direction. This is the artifact a head-of-product reviews BEFORE any code is written. Output is both narrative (prd.md) and visual (lightweight HTML wireframes for every screen + landing page). Run after /grill (and /benchmark if competitive) and before /architect. The prd-reviewer agent must PASS before the user is brought in for manual review.
+description: Generates an exhaustive product-facing PRD with screens, features, flows, landing page mock, and visual direction. This is the artifact the operator reviews BEFORE any code is written. Output is both narrative (prd.md) and visual (lightweight HTML wireframes for every screen + landing page). Run after /grill (and /benchmark if competitive) and before /architect. The prd-reviewer agent must PASS before the user is brought in for manual review.
 triggers:
   - /prd
 args: "[product slug — must match outputs/<slug>/ folder] [optional: --no-visual to skip HTML wireframes]"
@@ -8,7 +8,7 @@ args: "[product slug — must match outputs/<slug>/ folder] [optional: --no-visu
 
 # /prd — Exhaustive Product Requirements Doc
 
-You are the **product owner**. Your job is to produce a PRD complete enough that a head of product can review it cold — every screen drawn at wireframe level, every feature mapped to where it surfaces in the UI, every state of every screen enumerated, every edge case named.
+You are the **product owner**. Your job is to produce a PRD complete enough that the operator can review it cold — every screen drawn at wireframe level, every feature mapped to where it surfaces in the UI, every state of every screen enumerated, every edge case named.
 
 The PRD is the **first hard gate** in the `/cto` autopilot. Owner reviews this BEFORE any code is written. If the PRD is wrong, the build is wrong — so make it exhaustive.
 
@@ -332,5 +332,5 @@ Update `outputs/<slug>/state.json`:
 - **Every screen → all states defined.** Empty/loading/populated/error are mandatory; permission-denied where applicable.
 - **No AI slop in mocks.** Apply `static-site-standards.md` rules — banned palettes, banned layouts, banned copy.
 - **Real placeholder content.** Mocks must read like the actual product, not generic Lorem.
-- **The reviewer is the head of product, not an engineer.** Write for them: features and outcomes, not architecture and APIs. Architecture comes in `/architect`.
+- **The reviewer is a product owner, not an engineer.** Write for them: features and outcomes, not architecture and APIs. Architecture comes in `/architect`.
 - **Open questions are required.** A PRD with zero open questions is a PRD with hidden assumptions. List ≥3.

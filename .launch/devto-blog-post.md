@@ -24,7 +24,7 @@ If you've used MetaGPT, AutoGen, CrewAI, or Aider, the comparison should be usef
 
 ## The problem
 
-I'm a head of product at Shiprocket (India's largest D2C logistics platform). I ship side projects on weekends and wedge AI features into the day job. Claude Code became my daily driver about six months ago — it's the best in-terminal AI coding tool I've used.
+I work out of the CEO's Office at Shiprocket (India's largest D2C logistics platform), building everything with AI. I ship side projects on weekends and wedge AI features into the day job. Claude Code became my daily driver about six months ago — it's the best in-terminal AI coding tool I've used.
 
 But every session starts blank. Same conventions to re-explain. Same handoffs to re-wire. Same quality bar to re-enforce. After ~50 sessions of this, I built Tanker: a `.claude/` folder you drop into any project. 34 slash skills, 9 specialist agents, 3 always-on rules.
 
@@ -175,7 +175,7 @@ If you ship something with Tanker, post it. The fastest way to feedback that imp
 
 ---
 
-*Tanish Girotra is head of product at Shiprocket, India. He ships AI side-projects when he should be sleeping.*
+*Tanish Girotra works out of the CEO's Office at Shiprocket, India — building everything with AI. He ships side-projects when he should be sleeping.*
 ````
 
 ## Don't

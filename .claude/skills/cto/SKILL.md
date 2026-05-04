@@ -156,7 +156,7 @@ Run these in order, each reading the previous output:
      "abort"                — stop /cto, keep state.json for resume later
    ```
 
-   Wait for user input. Do NOT proceed silently. The whole point of this gate is that the human is the head of product.
+   Wait for user input. Do NOT proceed silently. The whole point of this gate is that the human is the operator and final decision-maker.
 
    - On `approved`: append `"prd"` and `"prd_human_review"` to `phases_done`. Continue to step 6.
    - On `fix: ...`: write the feedback to `outputs/<slug>/prd/feedback-<n>.md`, re-run `/prd` with feedback as input, then prd-reviewer, then back to this gate.

@@ -38,7 +38,7 @@ Repo: https://github.com/tanishg98/tanker (MIT)
 Docs + comparisons: https://tanker.dev
 Five worked examples: https://github.com/tanishg98/tanker/tree/main/examples
 
-Honest with this community: I'm not a full-time AI infra builder. I'm a head of product who needs to ship. Tanker is what I needed; if it's useful to you, great. PRs welcome.
+Honest with this community: I'm not a full-time AI infra builder. I work out of Shiprocket's CEO Office building everything with AI, and I need things that ship fast. Tanker is what I needed; if it's useful to you, great. PRs welcome.
 
 Most useful feedback: is the two-gates pattern too restrictive? Too few? What would you change?
 ```

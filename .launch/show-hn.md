@@ -25,7 +25,7 @@ https://github.com/tanishg98/tanker
 ## First comment (post immediately after submission)
 
 ```
-I'm Tanish (head of product at Shiprocket, India). I built Tanker because I kept hitting the same problem: Claude Code is great at code but blank-slate at product workflows. Every session, I was re-explaining the same conventions, the same quality bar, the same handoffs.
+I'm Tanish — CEO's Office at Shiprocket (India), building everything with AI. I built Tanker because I kept hitting the same problem: Claude Code is great at code but blank-slate at product workflows. Every session, I was re-explaining the same conventions, the same quality bar, the same handoffs.
 
 Tanker is a `.claude/` folder you drop into any project — 34 slash skills, 9 specialist agents, 3 always-on rules. The headline command is `/cto "<one-line brief>"` which runs the whole pipeline: brief → /grill → /prd → architect → plan → provision (GitHub + Supabase + Vercel + Railway via real APIs) → parallel build subagents → mvp review → deploy. Two human gates pre-qualified by review agents — you spend ~30 min total reviewing.
 

@@ -20,7 +20,7 @@ Comparison page: https://tanker.dev/comparisons/metagpt/
 Would love a 30-second read; if it sparks anything I'd appreciate the signal boost. Whatever direction it goes, no expectations.
 
 Tanish
-(head of product, Shiprocket India)
+(CEO's Office, Shiprocket India · building everything with AI)
 
 Repo: https://github.com/tanishg98/tanker
 ```

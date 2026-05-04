@@ -121,7 +121,7 @@ Honest:
 
 - You're already on **Claude Code** and want to stop re-explaining conventions every session.
 - You want a **deployed URL**, not a code repo. Provisioning + deploy + monitoring should be in scope, not your problem to wire afterwards.
-- You want **human gates without attention burn** — you want to be the head of product, not the QA bot.
+- You want **human gates without attention burn** — you want to be the operator, not the QA bot.
 - You have an **Obsidian vault** or a **curated GitHub reference library** you want your autopilot to draw from.
 - You want **opinionated quality rails** (No AI Slop ban list, semantic HTML, mobile-first, light-mode-for-SMB-tools).
 - You want **predictable spend** — `--max-cost-usd` cap.
