@@ -3,3 +3,10 @@
 *.local.json
 *.env
 node_modules/
+
+# Python bytecode caches (brain-index uses chromadb)
+__pycache__/
+*.pyc
+
+# Runtime lock files
+.claude/scheduled_tasks.lock
