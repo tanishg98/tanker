@@ -137,8 +137,8 @@ references:
     tags: [supabase, postgres, auth, rls]
 
   - url: https://github.com/peecai/peec
-    why: "GEO suite competitor — close to Visibl, study their UX"
-    tags: [geo, competitor, ui-ref]
+    why: "GEO suite reference — study their UX"
+    tags: [geo, ui-ref]
 
   - url: https://github.com/anthropics/anthropic-cookbook
     why: "Reference patterns for prompt caching + tool use + advisor pattern"
