@@ -1,7 +1,7 @@
 ---
 # Builder Ethos — Always On
 
-Core engineering principles for everything built in this project. Part of tanker.
+Core engineering principles for everything built in this project. Part of tstack.
 
 ---
 
@@ -136,7 +136,7 @@ Skills have a natural order. When one skill completes, it should prompt or autom
 - `/autoresearch-review` returns PASS → prompt: "Run `/ship` to open the PR?"
 
 **Prompt-and-confirm chains (always ask before continuing):**
-- `/grill` ends → "Ready to run `/architect` or `/createplan` with this brief?"
+- `/office-hours` ends → "Ready to run `/architect` or `/createplan` with this brief?"
 - `/design-shotgun` direction approved → "Proceed to build? Run `/execute` with this design brief."
 - `/ship` opens PR → "Run `pre-merge` agent before merging."
 - `/retro` completes → "Update the project brain with these learnings? Run `/learn`."
