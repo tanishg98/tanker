@@ -20,7 +20,6 @@ The plan is a shared artefact — it's how we track what's being built, in what 
 
 **Reference:**
 - Output shape: linear list of typed tasks with explicit verify + dependencies. Risk-first ordering (P0 before P1 before P2).
-- The closest in-repo gold standard: `outputs/d2c-os-v1/plan.md`.
 - Each step is small enough to verify in one pass — break further if a step exceeds 60 minutes of estimated work.
 
 **Output Format:**

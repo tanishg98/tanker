@@ -14,7 +14,7 @@
 
 - Slug derived: `indian-d2c-analyst`
 - `state.json` initialized.
-- Brain-index returned 8 relevant chunks from `~/Desktop/Obsidian/Brain/wiki/concepts/sdn_*` and `wiki/projects/d2c_os_*`.
+- Brain-index returned 8 relevant chunks from the local vault.
 - Curated refs surfaced 3 inspirational repos for the chat UI shape.
 
 [Real `messages.jsonl` snippet here.]
@@ -26,7 +26,7 @@
 ### Phase 3 — Decision gates
 
 - `/grill` — six forcing questions answered. Killer assumption: merchants will paste API keys for 6 tools.
-- `/benchmark` — matrix vs Triple Whale, Datadrew, Kwik AI. Differentiator: vertical (Indian D2C) + Shiprocket data already present.
+- `/benchmark` — matrix vs three named competitors in the category. Differentiator: vertical focus + connector data already present.
 - `/prd` — 9 screens, 47 features, 12 flows. Wireframes at `outputs/<slug>/prd/index.html`.
 - `prd-reviewer` returned `PASS_WITH_FIXES` (3 medium findings, all in §6 visual direction).
 

@@ -3,3 +3,17 @@
 *.local.json
 *.env
 node_modules/
+
+# Python bytecode caches (brain-index uses chromadb)
+__pycache__/
+*.pyc
+
+# Runtime lock files
+.claude/scheduled_tasks.lock
+
+# Project-specific brain (sensitive — never tracked)
+.claude/brain.private.md
+.claude/projects/
+
+# Skill output artifacts (per-project working files, never public)
+outputs/

@@ -25,7 +25,6 @@ No code. No implementation details unless they affect the architecture.
 
 **Reference:**
 - Use C4 model levels (Context → Container → Component) but skip the diagrams unless asked. Focus on text + clean tables.
-- Mirror `outputs/d2c-os-v1/architecture.md` if present — that's the gold standard for this repo.
 
 **Output Format:**
 1. `outputs/<slug>/architecture.md` — narrative.
