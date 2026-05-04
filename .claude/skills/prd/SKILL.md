@@ -28,7 +28,6 @@ This is not a vibe doc. It is a contract.
 
 **Reference example (lift the structure verbatim):**
 - Use a few-shot pattern: every section has a worked example before the LLM is asked to fill it in. The structure is rigid; the content is the variable.
-- Tanker's own `outputs/d2c-os-v1/prd/Rocketizer-PRD-v1.md` is the closest gold-standard PRD in this repo. When in doubt, mirror its specificity.
 
 **Output Format (this skill produces three files, all required):**
 1. `outputs/<slug>/prd/prd.md` — the narrative document (sections 1–13 below).
