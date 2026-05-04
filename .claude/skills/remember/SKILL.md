@@ -87,7 +87,7 @@ Generate a concise memory block from brain.md + context.md. Keep it **under 40 l
 
 ```markdown
 ## Active Project Memory
-<!-- tstack:remember — auto-updated, do not edit manually -->
+<!-- tanker:remember — auto-updated, do not edit manually -->
 <!-- Last updated: [ISO date] -->
 
 ### What this project is
@@ -104,16 +104,16 @@ Generate a concise memory block from brain.md + context.md. Keep it **under 40 l
 
 ### Preferences (owner's explicit instructions)
 [bullet list — max 5 from brain.md Preferences section]
-<!-- end tstack:remember -->
+<!-- end tanker:remember -->
 ```
 
 ### Where to write it
 
-**If `CLAUDE.md` exists** in the project root: append/update the `## Active Project Memory` section. Replace the block between `<!-- tstack:remember -->` and `<!-- end tstack:remember -->` if it already exists.
+**If `CLAUDE.md` exists** in the project root: append/update the `## Active Project Memory` section. Replace the block between `<!-- tanker:remember -->` and `<!-- end tanker:remember -->` if it already exists.
 
 **If `CLAUDE.md` does not exist** in the project root: create it with just the memory block. Don't invent other content.
 
-**Never overwrite** content outside the `<!-- tstack:remember -->` markers.
+**Never overwrite** content outside the `<!-- tanker:remember -->` markers.
 
 ---
 
@@ -157,7 +157,7 @@ Ready. What would you like to work on?
 ## Rules
 
 - **The memory block must be under 40 lines.** It's a summary, not a copy of brain.md. If brain.md has 20 pitfalls, pick the 5 most critical.
-- **Never touch content outside the markers.** The `<!-- tstack:remember -->` delimiters define the safe zone. Everything outside them is untouched.
+- **Never touch content outside the markers.** The `<!-- tanker:remember -->` delimiters define the safe zone. Everything outside them is untouched.
 - **Prefer recency.** If brain.md has 10 conventions, surface the ones added most recently first — they're most likely to be relevant.
 - **Run after every /learn session.** brain.md is the source of truth; CLAUDE.md is the cache. Keep the cache current.
 - **If neither brain.md nor context.md exists**, say so and suggest running `/learn` to create them rather than writing an empty block.

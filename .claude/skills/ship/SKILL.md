@@ -156,7 +156,7 @@ gh pr create --title "[title]" --body "$(cat <<'EOF'
 [optional: anything non-obvious about the approach, known limitations, follow-up work]
 
 ---
-🤖 Built with [tstack](https://github.com/tanishg98/tstack)
+🤖 Built with [tanker](https://github.com/tanishg98/tanker)
 EOF
 )"
 ```

@@ -1,6 +1,6 @@
 ---
 name: benchmark
-description: Produces an exhaustive feature matrix for a competitive product category BEFORE any PRD is written. Rows = atomic features, columns = competitors + you, cells = yes/no/partial with evidence. Forces "does product X do feature Y?" instead of prose summaries where features slip through. Run this before /office-hours, /architect, or any PRD work on a competitive product. Replaces lazy prose teardowns.
+description: Produces an exhaustive feature matrix for a competitive product category BEFORE any PRD is written. Rows = atomic features, columns = competitors + you, cells = yes/no/partial with evidence. Forces "does product X do feature Y?" instead of prose summaries where features slip through. Run this before /grill, /architect, or any PRD work on a competitive product. Replaces lazy prose teardowns.
 triggers:
   - /benchmark
 args: "[category or product space, e.g. 'GEO/AEO platforms for ecommerce' or 'Indian B2B outbound tools']"
@@ -64,7 +64,7 @@ Below the matrix, produce three sections:
 Write the matrix to `outputs/benchmark/[category-slug].md`.
 
 End with:
-> **Next:** Run `/office-hours` or `/architect` with this matrix as input. Every feature in your PRD must map back to a row in this matrix — labeled ship-v1, ship-v1.5, defer, or skip + why.
+> **Next:** Run `/grill` or `/architect` with this matrix as input. Every feature in your PRD must map back to a row in this matrix — labeled ship-v1, ship-v1.5, defer, or skip + why.
 
 ---
 
