@@ -56,6 +56,25 @@ models:
   /retro: claude-haiku-4-5-20251001
   /learn: claude-haiku-4-5-20251001
 
+  # Roadmap additions (2026-05-17)
+  /compound: claude-sonnet-4-6    # pattern extraction needs nuance
+  /dispatch: claude-sonnet-4-6    # orchestrator; workers pick their own
+  /overnight: claude-sonnet-4-6   # thin wrapper around /swarm
+  /verify: claude-sonnet-4-6      # rubric grader — Opus only for prd-quality
+
+# Overnight runner config — read by .claude/skills/overnight/run.sh
+overnight:
+  max_seconds: 14400        # 4h wall-clock cap on the whole run
+  max_parallel: 3           # passed to /swarm
+  per_task_timeout: 1800    # 30 min per task, passed to /swarm
+  open_prs: false           # if true, /swarm runs with --pr
+
+# /swarm (already documented above) — keeping the config here for discoverability
+swarm:
+  max_parallel: 5
+  hard_cap: 20
+  timeout: 1800
+
 # Per-agent model preferences. Provisioner agents are mostly API-shape work
 # and respond to clear prompts — Sonnet handles them well. Reviewers run on
 # Opus because false PASSes are expensive.

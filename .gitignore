@@ -11,6 +11,13 @@ __pycache__/
 # Runtime lock files
 .claude/scheduled_tasks.lock
 
+# User-local Claude Code settings (hooks are opt-in per machine)
+.claude/settings.json
+.claude/settings.local.json
+
+# Overnight runner state (per-machine)
+.claude/hooks/.session-counter
+
 # Project-specific brain (sensitive — never tracked)
 .claude/brain.private.md
 .claude/projects/
