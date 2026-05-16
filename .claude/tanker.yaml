@@ -105,6 +105,20 @@ cost_ceilings:
   analyst_default_usd: 2.00
   prd_default_usd: 1.50
 
+# /swarm — parallel worktree agents. Defaults are conservative; raise after
+# the first few runs prove out on real tasks. Hard cap of 20 is enforced by
+# dispatch.sh regardless of what is set here.
+swarm:
+  max_parallel: 5
+  timeout_per_task_s: 1800
+  default_model: claude-sonnet-4-6
+  open_pr_by_default: false
+  estimated_cost_per_task_usd:
+    haiku: 0.05
+    sonnet: 0.15
+    opus: 1.20
+  confirm_above_usd: 20.00
+
 # Retry behaviour. Bounded loops everywhere — beyond N attempts, surface to human.
 retries:
   pre_merge_max: 2
