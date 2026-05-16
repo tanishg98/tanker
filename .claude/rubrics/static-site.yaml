@@ -1,0 +1,72 @@
+name: static-site
+description: Grades a static HTML/CSS/JS site against Tanker's static-site-standards rules.
+applies_to: "outputs/*/index.html"
+
+criteria:
+  - id: single_file
+    weight: 0.05
+    critical: false
+    check: "Single index.html with inline <style> and <script>, unless project explicitly has multiple pages."
+
+  - id: no_framework
+    weight: 0.10
+    critical: true
+    check: "No React/Vue/Svelte/Angular. No build tooling. File opens directly in a browser."
+
+  - id: css_vars_in_root
+    weight: 0.10
+    critical: false
+    check: "Colors, fonts, spacing, max-width defined as CSS custom properties in :root."
+
+  - id: mobile_responsive
+    weight: 0.10
+    critical: true
+    check: "Layout works at 375px width. Uses clamp() for heading sizes."
+
+  - id: intersection_observer
+    weight: 0.05
+    critical: false
+    check: "Scroll-triggered animations use IntersectionObserver, not scroll events."
+
+  - id: prefers_reduced_motion
+    weight: 0.05
+    critical: false
+    check: "Animations wrapped in @media (prefers-reduced-motion: no-preference)."
+
+  - id: image_alt_lazy
+    weight: 0.05
+    critical: false
+    check: "Every <img> has descriptive alt text and loading=\"lazy\"."
+
+  - id: semantic_html
+    weight: 0.05
+    critical: false
+    check: "Uses <header><nav><main><section><article><footer> appropriately. No header level skips."
+
+  - id: meta_basics
+    weight: 0.05
+    critical: false
+    check: "Has <title>, <meta name=description>, <meta viewport>."
+
+  - id: no_ai_slop
+    weight: 0.20
+    critical: true
+    check: "No purple/violet gradient as primary palette. No icon-in-circle 3-col grids. No 'unlock the power of' copy. Not >60% center-aligned. No Papyrus/Comic Sans."
+
+  - id: focus_states
+    weight: 0.10
+    critical: true
+    check: "Every interactive element has visible hover and focus states. No outline:none without replacement."
+
+  - id: no_console
+    weight: 0.05
+    critical: false
+    check: "No console.log in delivered code."
+
+  - id: no_picsum
+    weight: 0.05
+    critical: false
+    check: "Picsum placeholder URLs replaced with Unsplash or final imagery before delivery."
+
+pass_threshold: 0.85
+conditional_threshold: 0.70

@@ -1,0 +1,47 @@
+name: pr-readiness
+description: Minimum bar a branch must clear before opening a PR.
+applies_to: "branch:*"
+
+criteria:
+  - id: commit_message_style
+    weight: 0.10
+    critical: false
+    check: "Each commit subject is imperative, under 72 chars, scoped (feat/fix/chore/docs/refactor)."
+
+  - id: no_secrets
+    weight: 0.20
+    critical: true
+    check: "No tokens, API keys, OAuth secrets, .env contents in any committed file."
+
+  - id: no_stray_console
+    weight: 0.05
+    critical: false
+    check: "No console.log / print debug statements introduced in source files."
+
+  - id: tests_present_or_justified
+    weight: 0.15
+    critical: false
+    check: "New behavior has a test, OR the commit message explains why a test was not added."
+
+  - id: diff_focused
+    weight: 0.10
+    critical: false
+    check: "Diff only touches files related to the stated change. No drive-by formatting, no adjacent refactors."
+
+  - id: docs_updated
+    weight: 0.10
+    critical: false
+    check: "If user-facing behavior changed, README/USER-CHECKLIST/SKILL.md updated to match."
+
+  - id: branch_name_convention
+    weight: 0.05
+    critical: false
+    check: "Branch name follows feat/<topic>, fix/<topic>, chore/<topic>, docs/<topic>."
+
+  - id: builds_clean
+    weight: 0.25
+    critical: true
+    check: "Lint passes, typecheck passes, tests pass on this branch."
+
+pass_threshold: 0.85
+conditional_threshold: 0.70

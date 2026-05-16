@@ -1,0 +1,14 @@
+{
+  "_comment": "Tanker example Claude Code settings. Copy to .claude/settings.json (gitignored) to enable. The stop-auto-review hook spawns a read-only review agent at session end when there is a non-trivial diff. See .claude/hooks/README.md for details and opt-out.",
+
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "./.claude/hooks/stop-auto-review.sh" }
+        ]
+      }
+    ]
+  }
+}
